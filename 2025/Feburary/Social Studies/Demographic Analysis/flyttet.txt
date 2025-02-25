@@ -1,0 +1,411 @@
+2001-12-22,Engansveien, STEINSDALEN
+1999-10-26,Salhusvegen, SALHUS
+1987-04-07,Grotlevegen, BREMANGER
+1964-04-20,Vivelstsadvegen, LØTEN
+2003-05-28,Hamkollvegen, ÅSERAL
+1995-07-19,Malerhaugveien, OSLO
+1986-06-04,Birch-Reichenwalds gate, OSLO
+1994-01-13,Orestadveien, HELLELAND
+1980-11-21,Blåklokkeveien, MJØNDALEN
+1990-02-02,Steenstrups gate, OSLO
+1954-08-06,Arenfeldts vei, KRISTIANSAND S
+1994-08-18,Kildevegen, LØTEN
+1988-08-26,Mellomveien, KRISTIANSUND N
+1939-03-30,Engfaret, HASLUM
+1993-10-01,Kobbervikdalen, DRAMMEN
+1970-07-20,Niels Juels gate, STAVANGER
+2001-05-02,Nerdrumsveien, FETSUND
+1972-06-07,Vardheivegen, BRYNE
+1956-07-18,Utstrandveien, UTHAUG
+1999-06-16,Sinsenterrassen, OSLO
+2001-01-16,Bjerregaards gate, OSLO
+1947-05-16,Moseidvegen, VENNESLA
+1994-07-17,Austrheimsvegen, AUSTRHEIM
+1990-02-01,Gudbrandsdalsvegen, DOVRE
+1987-07-23,Nebyvegen, BRUMUNDDAL
+1940-08-09,Jernverksgata, NOTODDEN
+1980-02-15,Rådyrvegen, ELVERUM
+1992-05-20,Knappumsvegen, FLISA
+1938-06-20,Ole Vigs gate, STJØRDAL
+1968-08-23,Hagtornveien, DRAMMEN
+1997-01-11,Midnattsolvn, ANDENES
+1971-10-12,Kringveien, OSLO
+1989-06-20,Prestmovegen, SØR-FRON
+1969-08-12,Nesåsveien, FINSTADJORDET
+1987-06-27,Sinsenveien, OSLO
+1960-12-17,Øvre Langåsen, BALLANGEN
+1954-06-14,Bakkemoen, BIRKELAND
+1994-07-02,Innherredsveien, TRONDHEIM
+1978-02-17,Leveldvegen, ÅL
+1968-10-12,SVOLVÆR
+2001-10-03,Storengveien, STABEKK
+1991-02-06,Svenslivegen, EIDSVÅG I ROMSDAL
+1979-08-02,Bjørnheimveien, OSLO
+1987-12-15,Jakobslivegen, JAKOBSLI
+1973-09-20,Haslestien, HAFSLUNDSØY
+2001-05-22,Solhøgdavegen, LILLEHAMMER
+1991-10-02,Gjerdrumsgata, LILLESTRØM
+1994-07-21,Eikskollen, ØSTERÅS
+1953-01-06,Storøyveien, BORKENES
+1995-04-20,Granittveien, KONGSBERG
+2002-04-25,Sigurd Jorsalfars veg, TRONDHEIM
+2000-05-24,Hattesteinen, FLEKKERØY
+1986-10-24,Rådhusvegen, NORDFJORDEID
+1961-11-16,TØNSBERG
+2000-02-03,SOLHEIM, NAUSTDAL
+1996-04-10,Dynekilgata, OSLO
+1984-09-19,JESSHEIM
+1978-01-19,Krohnåsvegen, RÅDAL
+1946-03-22,Hauanveien, EGERSUND
+1975-08-30,Bjørgåsvegen, EVANGER
+1982-08-20,VEAVÅGEN
+1989-07-26,Neidenveien, NEIDEN
+1974-12-14,Steinhagen, JØRPELAND
+1998-02-07,Bjørnehiet, BODØ
+1983-06-09,Viken, SKEI I JØLSTER
+1979-09-04,Gartnetnjunni, KAUTOKEINO
+1990-09-21,Flesakerveien, VESTFOSSEN
+1980-10-13,Strømgaten, BERGEN
+1983-03-09,Dypvågveien, TVEDESTRAND
+1974-06-28,SJERNARØY
+1950-09-29,Vikesågata, VIKESÅ
+1985-09-07,Niels Abels gate, STAVANGER
+1979-04-19,SINSENVEIEN, OSLO
+1991-11-05,Avstikkeren, OSLO
+1982-10-06,Cappelens gate, SKIEN
+1949-08-23,Bjørgegrend, FYLLINGSDALEN
+1952-10-20,Håkonskastet, BJØRNEMYR
+1974-04-04,Hetlandsgata, BRYNE
+1990-05-05,Brannstasjonsveien, SANDNES
+1995-11-30,Lerkeveien, KORGEN
+1997-06-20,Bogringen, BORGENHAUGEN
+2002-10-10,Monabekkveien, DIRDAL
+2001-06-14,Holmliveien, OSLO
+1955-01-26,Tranestien, KRISTIANSAND S
+2005-03-01,Ognasvingen, STEINKJER
+1986-02-19,Lågenvegen, LILLEHAMMER
+1998-11-27,Fyllingsjøen, LANGEVÅG
+1966-07-23,Løvåsbakken, FYLLINGSDALEN
+1986-02-01,Bostadveien, BREKSTAD
+1986-04-07,Sperrevikvegen, LYSEKLOSTER
+1988-11-05,Bærumsveien, BEKKESTUA
+1981-11-04,Eidkjosvegen, KVALØYA
+1987-05-08,Majorstuveien, OSLO
+1989-06-11,KRISTIANSAND S
+2003-03-26,Kystveien, ARENDAL
+2000-02-22,Trelastveien, OPPEGÅRD
+1975-06-04,Bokfinkveien, STATHELLE
+2000-06-02,Granbergstubben, OSLO
+1998-08-03,Pilotveien, OSLO
+1997-07-05,Mølstadvegen, NES PÅ HEDMARKEN
+1956-11-04,Nihusvegen, SKODJE
+1965-11-12,Elgveien, MOSS
+1992-06-14,Edvard Munchs gate, ÅSGÅRDSTRAND
+1990-04-26,Dr. Jenssens vei, GJETTUM
+1983-09-08,KLEPPESTØ
+1979-09-04,MOSS
+1957-10-29,Solvegen, STJØRDAL
+2000-02-23,Høietun, MOSBY
+1984-05-28,Granstien, KLEPPE
+1962-07-05,Krokvegen, FURNES
+1956-08-22,-, EGGEDAL
+2003-06-15,Armauer Hansens veg, TRONDHEIM
+1998-01-13,Reiersbakken, MOEN
+1972-01-14,Alunsjøveien, OSLO
+1965-07-16,Ospelia, HAGAN
+1969-11-23,Rødsåsveien, UNDRUMSDAL
+1999-12-28,Alfred Trønsdals veg, TRONDHEIM
+1961-07-09,PORSGRUNN
+1997-07-31,Solliveien, LYSAKER
+1977-04-02,Markveien, OSLO
+1995-09-24,Deichmans gate, OSLO
+1972-01-27,Toftes gate, OSLO
+1974-09-07,Berhusveien, KRISTIANSAND S
+1962-05-20,Høddalen, FREDRIKSTAD
+1948-05-27,Stadsing Dahls gate, TRONDHEIM
+1989-04-14,Mørtelverksbakken, OSLO
+1991-09-07,Røed, NEDENES
+1999-06-10,Sandviksveien, BERGEN
+2002-04-07,Bildøybakken, KOLLTVEIT
+2003-06-14,Hagerups vei, BERGEN
+1981-05-25,Storms gate, BERGEN
+2002-09-11,Flesi, HØVÅG
+1999-03-27,Sundløkkaveien, TORP
+1990-07-23,Kvernevik Ring, HAFRSFJORD
+2001-01-28,Rongavegen, BOLSTADØYRI
+2000-01-28,Bakkeveien, SALTNES
+2001-11-23,Blichs gate, DRAMMEN
+1967-04-17,Rollandslia, ULSET
+1952-10-09,Stølsvikvegen, SKJOLDASTRAUMEN
+2002-06-17,TINNGATE, RJUKAN
+1947-11-19,MYSEN
+1988-06-01,Åsstuevegen, LILLEHAMMER
+1995-11-02,Teiebærvegen, LEVANGER
+1939-08-31,Øvre Lekve, ULVIK
+2002-02-08,Digernesvegen, SPILLUM
+1990-12-19,Eiriks gate, OSLO
+1984-09-30,Glassverktunet, LARVIK
+1963-05-27,Plutos vei, SANDEFJORD
+1947-12-08,Esvikveien, OPPHAUG
+1964-05-06,Tyrihjellveien, GAMLE FREDRIKSTAD
+1971-04-19,Henrik ourens veg, TRONDHEIM
+1990-04-27,Pallanevegen, VENNESLA
+1952-04-24,KRISTIANSAND S
+1996-11-29,Balsfjordgata, TROMSØ
+1981-09-28,Østerbo, HALDEN
+1988-08-04,Kvåvikveien, LYNGDAL
+1951-08-27,Skogveien, HIS
+1939-11-09,Thomas Hirsch gate, TRONDHEIM
+1995-01-03,Arendalsgata, OSLO
+1985-01-16,Stadsing Dahls gate, TRONDHEIM
+1954-09-10,GAMLE FREDRIKSTAD
+1957-07-31,Masjokdalen, TANA
+1986-08-11,Richard Baches vei, NESODDTANGEN
+1996-02-15,Byåsveien, TRONDHEIM
+1993-05-26,Semslinna, SEM
+1981-06-19,Krokenveien, HØNEFOSS
+2005-07-04,Grøtlivegen, SANDER
+1971-01-18,Anton Jenssens veg, RANHEIM
+1974-10-08,Frits Kiærs vei, OSLO
+1989-11-10,Sigmunds vei, TRONDHEIM
+1966-11-26,Lyngbøveien, LAKSEVÅG
+1951-10-02,Håkons gate, LARVIK
+1984-12-17,Grønnegata, TROMSØ
+1993-09-30,Bossekopveien, ALTA
+1996-06-08,Rystene, HOVDEBYGDA
+1964-04-08,Ortuflaten, FYLLINGSDALEN
+1986-06-10,Gartneriveien, SANDNES
+1953-04-14,Åsvegen, ÅSGREINA
+1959-10-24,Fredbos vei, ASKER
+1983-12-23,Myrvegen, RIDABU
+1989-10-26,Søndre Vardåsen, LILLESAND
+1991-06-01,Sørvangen, REISTAD
+1994-07-10,Vesterheimveien, GRÅLUM
+1970-05-02,Rambergveien, TØNSBERG
+1992-04-24,Rogdavegen, NÅ
+1997-12-29,Ringgata, OSLO
+1988-07-29,Wallemsskogen, LAKSEVÅG
+1980-08-06,Brynjulfs vei, STADSBYGD
+1993-05-17,Haneholmveien, SANDEFJORD
+1989-12-26,Økernveien, OSLO
+1984-01-15,Smalgangen, OSLO
+2001-11-09,Jarlsborgveien, TRONDHEIM
+1983-09-12,Kyrkjebønsvegen, HEMSEDAL
+1997-08-12,Vestre Torggaten, BERGEN
+1984-03-25,VASSDALSVEIEN / ÁRAVUOMEBÁLLGI, BJERKVIK
+1972-08-26,Litjsten, LUNDAMO
+1988-11-02,Nedre Ulsetskogen, ULSET
+2014-01-20,Nattlandsfjellet, BERGEN
+1992-03-24,Huldreveien, BORGEN
+1962-02-08,Kristofer Uppdals gate, STEINKJER
+1968-10-21,Drammensveien, OSLO
+1994-05-19,Bøkkerveien, OSLO
+1994-07-09,Klebersteinsveien, JEVNAKER
+1967-11-24,Jondalsveien, KONGSBERG
+2000-06-23,Siriusveien, VINTERBRO
+1985-12-14,Riihimækiveien, SKJETTEN
+2002-09-13,Liaåsen, FREDRIKSTAD
+1998-01-11,Harbitzalléen, OSLO
+1966-05-01,Østvedthagen, PORSGRUNN
+1995-02-20,Alsvågveien, ALSVÅG
+2000-04-21,Løkkegangen, OSLO
+1994-03-31,Almelandsvegen, SKULESTADMO
+1987-12-01,Gloppegata, HAUGESUND
+1967-07-12,DIKEMARK, HURDAL
+1972-02-12,Vinterkroken, HVALSTAD
+1957-07-19,Hybelsneset, STORD
+1976-11-22,Fjordtunvegen, TAU
+1949-09-24,Sørhaugveien, SANDNES
+1992-11-20,Olav Duuns veg, TRONDHEIM
+1978-09-23,Solveien, OSLO
+2001-10-27,FLØYRLIVEIEN, SANDNES
+1948-05-17,NORDFJORDEID
+1982-12-25,Hasselvegen, STJØRDAL
+1994-08-11,Fjellbuveien, ROLVSØY
+1996-06-12,Haugerudveien, OSLO
+1989-08-28,Maria Dehlis vei, OSLO
+1962-08-29,HARSTAD
+1982-01-10,Åslandhellinga, OSLO
+1999-03-05,Bliksetstugguvegen, LENA
+1949-07-20,Cappelens vei, OSLO
+1965-03-14,Reinsholm, VERDAL
+1992-08-05,TRONDHEIMSV - JESSHEIM, JESSHEIM
+1985-10-08,Stokmovegen, STJØRDAL
+1967-05-27,Blomvikvegen, FISKARSTRAND
+1990-03-20,Kvernstujordet, NITTEDAL
+1994-11-27,Kjølabergsvegen, FLISA
+1949-04-21,Norderhovgata, OSLO
+1981-10-20,Vevelstadåsen, LANGHUS
+1987-09-30,Lysakerveien, KROKSTADELVA
+1963-04-18,TOYRN GATAQ
+1974-05-20,Jutulveien, TØNSBERG
+1988-01-25,Granåsen, HOSLE
+1983-01-20,Lakselvbuktvegen, LAKSELVBUKT
+1980-09-08,RÅDHUSGATA, MJØNDALEN
+1951-12-30,Leiv Holthes veg, JESSHEIM
+1988-12-08,Schweigaards gate, OSLO
+1994-03-16,Julianus Holms veg, TRONDHEIM
+2002-01-05,Tores veg, STEINKJER
+1995-08-11,Trampen, AURSKOG
+2002-04-16,Blakstad hageby, VETTRE
+1993-06-06,Konvallveien, SPIKKESTAD
+1986-10-05,Rekavikgata, HAUGESUND
+2016-01-01,Strømsbuneset, ARENDAL
+1988-05-14,Kolabakkane, OS
+1972-02-01,Hageveien, SEM
+2002-01-31,LYNGDAL
+1976-12-09,Vingårdsveien, RENA
+1961-05-17,MOLDE
+1987-11-14,Peter Bechs gate, MOSJØEN
+1998-02-06,Veldrevegen, BRUMUNDDAL
+1989-11-28,janesteen, GODVIK
+2001-06-15,Stedjevegen, SOGNDAL
+1996-02-05,Smalgangen, OSLO
+1986-01-21,Kirkeveien, KJØPMANNSKJÆR
+1991-03-01,Stollveien, KONGSBERG
+2001-04-05,KJØLLEFJORD
+1969-09-04,Apalehaugen, STORD
+1985-08-16,Granholtet, LOMMEDALEN
+1980-05-29,Siriskjeret, STAVANGER
+1977-12-16,Auglendsdalen, STAVANGER
+1945-11-24,Småbergan, BJERKVIK
+1993-09-30,Søreidtræet, SØREIDGREND
+1996-08-22,Strandflåtveien, STAVANGER
+1996-05-05,Skolegata, STAVANGER
+1993-02-16,Kampheimveien, OSLO
+1990-02-09,Fredlundsvingen, BERGEN
+1968-03-31,Østabøringen, TALGJE
+1990-11-11,Nordbråtenveien, KOLBOTN
+1993-09-19,Sminesveien, SORTLAND
+1948-05-21,Furulundtoppen, OSLO
+1953-01-08,Tjøttaveien, TJØTTA
+1990-12-24,Holstveita, TRONDHEIM
+1970-10-21,Fogdenget, TRONDHEIM
+1977-05-25,Prost Fergstads gate, STJØRDAL
+1992-07-22,Østveien, TJØME
+1976-10-23,Anders Syvertsens vei, TISTEDAL
+1978-04-30,Stranda, OSTEREIDET
+1956-12-22,STAVANGER
+1989-10-14,Sætrangsgata, HØNEFOSS
+1991-03-01,Lønningsåsen, STORD
+1985-09-14,Østlivegen, PORSGRUNN
+1985-06-01,Engersand Havn, GULLAUG
+1987-11-11,STORGATE
+1979-10-02,VEITVET, OSLO
+1987-06-24,Øvre ringvei, KRISTIANSAND S
+1953-04-11,SANDNES
+1989-06-25,STORGATE
+1988-12-24,Lauksletta, TROMSDALEN
+1983-07-21,Bjørnestien, KRISTIANSAND S
+1988-04-12,Gamle Ålgårdsveien, SANDNES
+2000-08-02,Heidmanns gate, HAMAR
+1990-01-27,Kjelsåsveien, OSLO
+1995-11-24,Sandeveien, BORRE
+1991-03-04,Stovner Senter, OSLO
+1997-01-29,Båtsmannsvegen, TROMSØ
+1996-02-19,Stavlovegen, SKOGN
+1999-05-28,Nymansveien, STAVANGER
+1998-02-20,Lauvstøveien, GRIMSTAD
+1980-11-13,Seilduksgata, OSLO
+1989-04-02,Kjølsetbakken, KONGSVINGER
+1989-11-10,Blomlivegen, KVALØYSLETTA
+1983-01-15,Harald Hårfagres gate, TRONDHEIM
+1983-11-25,Heggveien, FAUSKE
+1999-01-21,Nedre Storgate, DRAMMEN
+1998-11-20,Vestre Helleveien, SANDNES
+1963-09-14,KONGSBERG
+1963-11-25,Schweigaards gate, OSLO
+1960-09-06,Ingridsnes, LILLESAND
+1997-06-13,Øvre Lundeveg, PORSGRUNN
+1998-09-28,Wilhelm Sundts vei, STAVANGER
+1969-08-02,Moreneveien, ALTA
+2002-11-18,Skårerveien, LØRENSKOG
+1999-08-11,Huitfeldts gate, OSLO
+1992-07-06,Egnehjemveien, STRØMMEN
+1969-04-21,Tordivelveien, VEAR
+1993-05-03,Ringeriksveien, LIER
+1984-02-07,Gamle Skulevegen, HAUGLANDSHELLA
+1964-11-16,ÅLESUND
+1961-11-11,GJØVIK
+1989-07-30,Finstadlia, FINSTADJORDET
+1996-08-05,Marikovneset, STRUSSHAMN
+1999-04-13,Doktor Smiths vei, OSLO
+1998-08-13,Aspegata, ÅLESUND
+1997-06-19,Ytre Markeveien, BERGEN
+1933-08-04,Lindeveien, MANDAL
+1988-09-06,Bruheim, MARIFJØRA
+1965-12-14,Ekebergveien, HOLMESTRAND
+1990-09-27,Ullevålsveien, OSLO
+1973-03-11,Preståsveien, SANDEFJORD
+1985-07-12,Finstadrabben, FINSTADJORDET
+1951-08-02,Ospabakken, SANDNES
+1975-03-25,Steenstrups gate, OSLO
+2005-03-15,Bondistranda, ASKER
+2000-01-24,Nytrøhaugen, BODØ
+1986-03-06,Stavsetsvingen, TRONDHEIM
+1972-08-01,Mellomveien, SISTRANDA
+1997-07-01,Songdalsvegen, NODELAND
+1967-06-14,Bjarne Haugens gate, FINSTADJORDET
+1959-09-23,Wessels gate, STAVANGER
+1990-02-22,Høgåsveien, OSLO
+1993-12-01,Seljeveien, FINNSNES
+1999-01-14,Hanøyvegen, HAUGLANDSHELLA
+1950-03-19,Olsvikveien, OLSVIK
+1999-05-25,Gisundveien, GIBOSTAD
+1994-04-20,Svaleveien, BRØNNØYSUND
+1990-12-31,Bentsebrugata, OSLO
+1993-10-24,Reinslettveien, BODØ
+1999-08-19,Schønings gate, OSLO
+1988-09-18,Glemmengata, FREDRIKSTAD
+1955-03-18,Brattebakkjen, SAND
+1990-05-27,Dalevegen, SYKKYLVEN
+1984-12-28,LONGYEARBYEN
+1986-01-29,Grovikveien, KRISTIANSAND S
+1999-07-12,Fotveita, TRONDHEIM
+2000-04-18,Berggata, LARVIK
+1995-03-29,Sørengkaia, OSLO
+1962-05-10,Lygnaveien, SNARTEMO
+1994-04-11,Falstadvegen, EKNE
+1993-04-24,Frobusdalen, KRISTIANSAND S
+2004-11-16,Gustavvegen, GURSKEN
+1998-12-01,Leiteråsa, GODØYA
+2000-02-17,Bardølavegen, GEILO
+2001-08-25,Rolf E. Stenersens allé, OSLO
+1954-12-28,Utsikst Veien, JAREN
+1983-06-14,Anders Hovdens veg, TRONDHEIM
+1998-03-27,TYNSET
+1998-01-26,Bergsrudsvingen, KABELVÅG
+1944-01-18,Grønhaugvegen, ROSSLAND
+2001-01-02,Trondheimsveien, OSLO
+2002-10-22,Nordhusveien, BARDU
+2000-08-24,Müllergata, ALVDAL
+2003-09-27,Rugdevegen, JESSHEIM
+1944-03-31,SÆBØVIK
+1987-06-29,Dalmoveien, VALNESFJORD
+2000-10-22,Tante Ullrikkes Vei, OSLO
+2004-02-05,Skadvinvegen, HEMSEDAL
+1998-04-28,Saturnvegen, PORSGRUNN
+2004-03-10,Knausen, STAVANGER
+1985-06-24,Haugjordet, SANDVIKA
+1996-10-28,Mårskrenten, MOLDE
+2003-06-05,KLEPPE
+2000-01-07,Neptunveien, MELBU
+1954-10-26,Heradsbygdveien, HØNEFOSS
+1996-04-06,Idrettsvegen, VADSØ
+1993-04-24,LØKEN
+1997-01-14,Revestien, HERRE
+1994-03-29,Kniplia, GJERDRUM
+1942-08-25,I. Opsahls gate, LILLESTRØM
+1991-02-15,Steinsvikvegen, RÅDAL
+1987-03-11,Betzy Kjelsbergs vei, DRAMMEN
+1941-05-07,ÅS
+2001-01-03,Torvli, MORVIK
+2003-09-04,Lingelemveien, SANDEFJORD
+1992-02-04,Langgata, STAVANGER
+1997-11-13,Trondheimsveien, OSLO
+1939-03-04,Vangsflata, RISSA
+1991-10-25,Niels A. Nielsens veg, GJØVIK
+2000-07-02,Kvevegen, HAUGESUND
+1988-04-01,Damholtveien, ØRJE
+1999-06-16,Oluf Melvolds gate, HAMAR
+1991-01-28,Bogstadveien, OSLO
