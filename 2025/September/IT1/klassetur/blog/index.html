@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klassetur</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Sometype Mono:wght@400;500,600,700,800&amp;display=swap">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="tailwind.config.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="font-body text-text bg-background min-h-screen overflow-x-clip">
+    <div id="main" class="container mx-auto min-h-screen flex flex-col items-center justify-center py-12 md:py-32">
+        <div id="container" class="w-full max-w-[730px] px-5 flex flex-col gap-4 text-sm">
+            <div>
+                <h1 id="title" class="text-xl font-bold">Klassetur</h1>
+                <small id="subtitle">Reise til Sætaren Gård</small>
+            </div>
+
+            <p>
+                Vi reiser til <a href="https://www.dnt.no/hytter/betjente/seteren-gard/"
+                    class="font-bold underline underline-offset-2 decoration-white/50 hover:decoration-white scale-100 hover:underline-offset-4 duration-300">Sætaren Gård</a> på klassetur i
+                <i>august</i>. Ta med niste, klær etter vær, og godt humør!
+            </p>
+
+            <div class="flex flex-col items-center gap-1">
+                <a href="https://www.dnt.no/hytter/betjente/seteren-gard/">
+                    <img class="rounded-md border border-[#1b1b1b8a] shadow-lg" src="imgs/image.png"
+                        alt="Gården fra perspektivet til en drone">
+                </a>
+                <small>
+                    Gården fra perspektivet til en drone
+                </small>
+            </div>
+
+            <hr class="opacity-50">
+
+            <div class="flex gap-4 items-center justify-evenly flex-col md:flex-row">
+                <div>
+                    <h3 class="text-lg font-bold">Huskeliste</h3>
+
+                    <ul class="list-disc list-inside">
+                        <li>
+                            Laken og dynetrekk
+                        </li>
+                        <li>
+                            Matpakke til turen
+                        </li>
+                        <li>
+                            Drikkeflakse til vann
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold">Hytter</h3>
+
+                    <ol class="list-decimal list-inside">
+                        <li>
+                            <a
+                                href="sovehuset.html" class="font-bold underline underline-offset-2 decoration-white/50 hover:decoration-white scale-100 hover:underline-offset-4 duration-300">Sovehuset</a>
+                        </li>
+                        <li>
+                            Låven
+                        </li>
+                        <li>
+                            Eventyrhytta
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <hr class="opacity-50">
+        </div>
+    </div>
+</body>
+
+</html>

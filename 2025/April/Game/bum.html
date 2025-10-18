@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- change from txt to html -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komputer Kasyno</title>
+
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0f212e;
+            color: white;
+        }
+
+        .title {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 2%;
+            font-size: 48px;
+            font-family: monospace;
+        }
+
+        .grid {
+            grid-template-columns: repeat(5, 100px);
+            grid-template-rows: repeat(5, 100px);
+            display: grid;
+            user-select: none;
+        }
+        .box {
+            background-color: #071824;
+            margin: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 3px;
+            box-shadow: 0px 5px 0px #213743;
+
+            transform: translateY(0px);
+
+            transition: transform 0.1s ease, box-shadow 0.3s ease;
+        }
+        .box:hover {
+            transform: translateY(-2px);
+        }
+        .cover {
+            background-color: #2f4553;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            border-radius: 3px;
+
+            transition: transform 0.4s cubic-bezier(.77,-0.21,.83,.67), border-radius 0.3s cubic-bezier(.77,-0.21,.83,.67);
+        }
+        .cover.hidden {
+            transform: scale(0);
+            border-radius: 20px;
+        }
+        .mark {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            border-radius: 3px;
+        }
+        .mark img {
+            width: 90%;
+            height: 90%;
+
+            transform: scale(0);
+            transition: transform 0.6s cubic-bezier(.76,.36,.29,1.22);
+        }
+        .mark img.show {
+            transform: scale(1);
+        }
+        
+    </style>
+</head>
+<body>
+    <span class="title">💰 Komputer Kasyno 💸</span>
+    <div id="grid" class="grid"></div>
+
+    <script>
+        const CDN = 'https://cdn.dadik.lol/komputer_kasyno/';
+
+        const CLICKED_TO_WIN = 5;
+        const MINES = 3;
+
+        var clicked = 0;
+
+        const [
+            aCorrect,
+            aExplode,
+            aWin
+        ] = [
+            new Audio(CDN + 'correct.wav'),
+            new Audio(CDN + 'explode.wav'),
+            new Audio(CDN + 'win.mp3')
+        ]
+
+        let mines = Array.from(Array(25).keys());
+        while(mines.length > 3) {
+            mines.splice(Math.floor(Math.random() * mines.length), 1);
+        }
+
+        function isMine(i) {
+            return mines.includes(i);
+        }
+
+        const grid = document.getElementById('grid');
+        for(let i = 0; i < 25; i++) {
+            grid.innerHTML += `<div class="box"> <div class="cover" data-ismine="${isMine(i) ? 'yes' : 'no'}"></div><div class="mark"> <img src="${isMine(i) ? 'https://www.freeiconspng.com/thumbs/bomb-png/high-resolution-bomb-png-clipart-2.png' : 'https://static.vecteezy.com/system/resources/thumbnails/008/513/899/small/blue-diamond-illustration-png.png'}" /> </div> </div>`;
+        }
+
+        grid.querySelectorAll('.cover').forEach(el => {
+            el.addEventListener('click', e => {
+                if(clicked >= CLICKED_TO_WIN) return;
+
+                e.target.classList.add('hidden');
+                e.target.parentElement.querySelector('.mark img').classList.add('show');
+
+                if(e.target.dataset.ismine == 'yes') {
+                    aExplode.cloneNode().play();
+                    clicked = CLICKED_TO_WIN;
+
+                    setTimeout(_ => {
+                        fetch('/clicked_mine');
+                    }, 250);
+                } else {
+                    aCorrect.cloneNode().play();
+                    clicked++;
+                    if(clicked >= CLICKED_TO_WIN) {
+                        aWin.play();
+
+                        revealAll();
+                    }
+                }
+
+                setTimeout(_ => {
+                    e.target.parentElement.style.boxShadow = 'none';
+                }, 100);
+            });
+        });
+
+        async function revealAll() {
+            let i = 0;
+            for(const el of grid.querySelectorAll('.cover:not(.hidden)')) {
+                el.parentElement.querySelector('.mark img').style.transform = 'scale(0.6)';
+
+                await new Promise(r => setTimeout(r, 100));
+
+                el.parentElement.style.boxShadow = 'none';
+                el.style.opacity = 0.6;
+                el.style.backgroundColor = 'black';
+
+                i++;
+            }
+        }
+
+    </script>
+</body>
+</html>

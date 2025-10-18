@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plinko</title>
+    <script src="tailwind.js"></script>
+    <script src="tailwind.config.js"></script>
+</head>
+
+<body class="bg-background text-text min-h-svh">
+    <canvas class="w-full h-full border-2 border-gray-300"></canvas>
+
+    </canvas>
+    <script>
+        const canvas = document.querySelector('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let lastCol = 0;
+
+        function handleResize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.onresize = handleResize;
+
+        handleResize();
+
+        const RADIAN = 180 / Math.PI;
+        let rows = 3;
+
+        const entities = [];
+
+        let stop = false;
+
+        function getDistance(en1, en2) {
+            return Math.sqrt(Math.pow(en1.x - en2.x, 2) + Math.pow(en1.y - en2.y, 2));
+        }
+
+        class Simulation {
+            constructor() {
+                this.gravity = 0.1;
+                this.friction = 0.99;
+            }
+
+            addEntity(entity) {
+                entities.push(entity);
+            }
+
+            update() {
+                if (stop) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let entity of entities) {
+                    entity.update();
+                    entity.draw();
+                }
+            }
+        }
+
+        let collisions = 0;
+
+        class Ball {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 10;
+                this.color = 'white';
+                this.velocityY = 0;
+                this.velocityX = Math.random() * 0.1;
+                this.mass = 10;
+            }
+
+            update() {
+                this.velocityY += simulation.gravity;
+                this.y += this.velocityY;
+                this.x += this.velocityX;
+
+                if (this.y + this.radius > canvas.height) {
+                    this.y = canvas.height - this.radius;
+                    this.velocityY *= -simulation.friction;
+                }
+
+                const entitiesCollided = entities.filter(en => getDistance(en, this) < this.radius + en.radius && en != this);
+
+                if (entitiesCollided.length > 0) {
+                    const en = entitiesCollided[0];
+                    const contactAngle = Math.atan((en.x - this.x) / (en.y - this.y));
+                    const distance = getDistance(en, this);
+
+                    const deltaX = en.x - this.x;
+                    const deltaY = en.y - this.y;
+
+                    const heading = Math.atan(this.velocityX / this.velocityY);
+
+                    const deltaMass = this.mass - en.mass;
+                    const totalVelocity = Math.abs(this.velocityX) + Math.abs(this.velocityY);
+
+                    let newVY = (Math.asin(contactAngle) * totalVelocity) * 2;
+                    let newVX = (Math.acos(contactAngle) * totalVelocity) * 2;
+
+                    newVX = (newVX + this.velocityX);
+                    newVY = (newVY + this.velocityY);
+
+                    const newHeading = Math.atan(newVX / newVY);
+
+
+
+                    // new heading is the angle of the new velocity vector
+                    newVX = Math.cos(newHeading) * totalVelocity;
+                    newVY = Math.sin(newHeading) * totalVelocity;
+
+                    console.log({ sin: Math.sin(contactAngle), cos: Math.cos(contactAngle), totalVelocity })
+                    console.log({ oldVX: this.velocityX, oldVY: this.velocityY })
+                    console.log({ newHeading: newHeading * RADIAN })
+                    console.log({ newVX, newVY })
+                    console.log({ newVX, newVY, contactAngle, heading, en, ball: this, deltaX, deltaY })
+
+                    this.velocityX = newVX;
+                    this.velocityY = newVY;
+
+//                    if (collisions++ == 1) stop = true;
+                    console.log(collisions)
+
+                    if (lastCol + 200 > Date.now()) return;
+
+                    lastCol = Date.now();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        class Peg {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 10;
+                this.color = "white";
+                this.velocityY = 0;
+                this.velocityX = 0;
+                this.mass = 10_0000000;
+            }
+
+            update() { }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        const simulation = new Simulation();
+
+        function animate() {
+            simulation.update();
+            requestAnimationFrame(animate);
+        }
+
+        animate()
+
+        const width = canvas.width;
+        const height = canvas.height;
+        const gap = 80;
+
+        // entities.push(new Ball(width / 2 + 10 - Math.random() * 40, 20));
+        entities.push(new Ball(width / 2 + 10, 20));
+
+        for (let i = 0; i <= rows; i++) {
+            if (i < 2) continue;
+            for (let j = 0; j <= i; j++) {
+                entities.push(new Peg(width / 2 - gap * i * 0.5 + gap * j, 30 + gap * i * 0.8 + height / 2- 350 - gap * 0.5 * rows))
+            }
+        }
+    </script>
+</body>
+
+</html>
