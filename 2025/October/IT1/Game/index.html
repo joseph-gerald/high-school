@@ -5,383 +5,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Sometype+Mono:ital,wght@0,400..700;1,400..700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
         rel="stylesheet">
-    <script src="tailwind.config.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
 </head>
 
-<body class="bg-background text-text font-body font-jakarta min-h-screen flex flex-col">
-    <div>
-        <header class="flex gap-4 items-center p-3 bg-highlight rounded-b-xl mx-6 border border-border shadow-lg">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/LOGO_NRG.png" alt="" class="max-w-16">
-            <h1 class="text-3xl font-bold">
-                <span class="text-red-500">R</span><span class="text-green-500">G</span><span
-                    class="text-blue-500">B</span> Geussr
-            </h1>
-        </header>
-    </div>
+<body class="plus-jakarta-sans">
+    <header>
+        <img id="logo" src="assets/logo.png" alt="">
+        <h1 id="tittel">
+            <span style="color: red;">R</span><span style="color: rgb(0, 255, 0);">G</span><span style="color: blue;">B</span> Gjetteleken
+        </h1>
 
-    <div class="h-full flex flex-1 m-6 gap-6">
-        <main class="flex flex-col gap-3 w-full">
-            <div id="colour-preview"
-                class="bg-neutral-400 w-full h-full rounded-bl-3xl rounded-xl border border-border shadow-lg duration-300 relative flex flex-col overflow-hidden">
-                <div class="m-3">
-                    <div class="bg-highlight rounded-xl border border-border shadow-md w-full p-3 text-center relative">
-                        <p>
-                            Hva er RGB-koden til denne fargen?
-                        </p>
+        <div id="meny">
+            <button id="toggle-mode">
+                Mode
+            </button>
+            <button id="toggle-leaderboard">
+                Leaderboard
+            </button>
+        </div>
+    </header>
 
-                        <button id="refresh"
-                            class="absolute right-4 top-1/2 -translate-y-1/2 active:scale-95 hover:scale-105 duration-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="lucide lucide-refresh-cw-icon lucide-refresh-cw">
-                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                                <path d="M21 3v5h-5" />
-                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                                <path d="M8 16H3v5" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="gradient"
-                    class="absolute bottom-0 w-full h-1/4 bg-gradient-to-t from-black/50 to-transparent pointer-events-none">
-                </div>
-
-                <div id="center" class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 pb-16">
-
-                </div>
-
-                <div class="absolute bottom-0 w-full p-4">
-                    <div class="grid grid-cols-3 h-24 w-full gap-3 text-2xl font-bold">
-                        <button
-                            class="bg-highlight rounded-bl-2xl rounded-lg border border-border options shadow-md active:scale-95 hover:bg-opacity-95 duration-150">
-
-                        </button>
-                        <button
-                            class="bg-highlight rounded-lg border border-border options shadow-md active:scale-95 hover:bg-opacity-95 duration-150">
-
-                        </button>
-                        <button
-                            class="bg-highlight rounded-lg rounded-br-2xl border border-border options shadow-md active:scale-95 hover:bg-opacity-95 duration-150">
-
-                        </button>
-                    </div>
+    <main>
+        <div id="game">
+            <div id="spørsmål">
+                <div>
+                    Hva er RGB-koden til denne fargen?
                 </div>
             </div>
-        </main>
-        <aside
-            class="flex flex-col gap-3 min-w-72 p-3 bg-highlight rounded-xl rounded-br-3xl border border-border shadow-lg">
-            <h2 class="text-xl font-bold">Leaderboard</h2>
+        </div>
+    </main>
+    <aside>
+        <h3>
+            Hall of Fame
+        </h3>
 
-            <table class="text-center">
-                <thead>
-                    <tr>
-                        <th>
-                            #
-                        </th>
-                        <th>
-                            Navn
-                        </th>
-                        <th>
-                            Streak
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboard">
-                    <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            Bob
-                        </td>
-                        <td>
-                            10
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </aside>
-    </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        Navn
+                    </th>
+                    <th>
+                        Score
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        Bob
+                    </td>
+                    <td>
+                        1
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        Bob
+                    </td>
+                    <td>
+                        1
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        Bob
+                    </td>
+                    <td>
+                        1
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </aside>
 </body>
-<script>
-    const refresh = document.getElementById('refresh');
-    const colourPreview = document.getElementById('colour-preview');
-    const options = Array.from(document.querySelectorAll(".options"));
-    const gradient = document.getElementById('gradient');
-    const center = document.getElementById('center');
-
-    let leaderboardData = [];
-    let answerIndex = null;
-    let answer = null;
-    let streak = 0;
-    let fail = false;
-
-    if (localStorage.getItem('leaderboard')) {
-        leaderboardData = JSON.parse(localStorage.getItem('leaderboard'));
-    } else {
-        leaderboardData = [
-            { name: "Bob", streak: 10 }
-        ];
-    }
-
-    function rand() {
-        return Math.floor(Math.random() * 256)
-    }
-
-    function getRandomColour() {
-        return [rand(), rand(), rand()];
-    }
-
-    function getRandomColourString() {
-        return getRandomColour().join(", ");
-    }
-
-    function setColourString(str) {
-        colourPreview.style.backgroundColor = `rgb(${str})`;
-    }
-
-    function setColour(r, b, g) {
-        colourPreview.style.backgroundColor = `rgb(${r}, ${b}, ${g})`;
-    }
-
-    function randomize() {
-        const colourOptions = [
-            getRandomColourString(),
-            getRandomColourString(),
-            getRandomColourString()
-        ];
-
-        answerIndex = Math.floor(Math.random() * 3);
-        answer = colourOptions[answerIndex];
-
-        setColourString(answer);
-
-        for (const [index, colour] of Object.entries(colourOptions)) {
-            const option = options[index];
-
-            setTimeout(() => {
-                option.innerText = colour;
-            }, 150);
-
-            option.animate([
-                { opacity: 1, transform: 'translateY(0px)' },
-                { opacity: 1, transform: 'translateY(150px)', filter: "blur(5px)" },
-                { opacity: 1, transform: 'translateY(150px)', filter: "blur(2px)" },
-                { opacity: 1, transform: 'translateY(0px)' }
-            ], {
-                duration: 400,
-                easing: 'cubic-bezier(0.25, 1.15, 0.75, 1)',
-                fill: 'forwards'
-            });
-        }
-
-        gradient.animate([
-            { transform: 'translateY(0px)' },
-            { transform: 'translateY(10%)' },
-            { transform: 'translateY(0px)' }
-        ], {
-            duration: 300,
-            easing: 'ease-in-out',
-            fill: 'forwards'
-        });
-
-        options.forEach(opt => {
-            opt.style.backgroundColor = "";
-            opt.disabled = false;
-        });
-
-        center.animate([
-            { opacity: 1, transform: 'translateY(-50%) translateX(-50%) scale(1)' },
-            { opacity: 0, transform: 'translateY(-50%) translateX(-50%) scale(0.9)' },
-        ], {
-            duration: 300,
-            easing: "cubic-bezier(0.25, 1.15, 0.75, 1)",
-        }).onfinish = () => {
-            center.innerHTML = "";
-        };
-    }
-
-    options.forEach(option => {
-        option.onclick = event => {
-            if (option.disabled) return;
-
-            const isTrusted = event.isTrusted;
-
-            setTimeout(() => {
-                option.disabled = true;
-            }, 0);
-
-            if (option.innerText == answer) {
-                option.animate([
-                    { transform: 'scale(1)' },
-                    { transform: 'scale(1.02)', backgroundColor: '#40BC40' },
-                    { transform: 'scale(1)', backgroundColor: isTrusted ? '' : '#40BC40' }
-                ], {
-                    duration: 500,
-                    easing: 'ease-in-out'
-                }).onfinish = () => {
-                    if (isTrusted) randomize();
-                    else option.style.backgroundColor = "#40BC40";
-                }
-
-                if (!isTrusted) {
-                    options.forEach(opt => {
-                        setTimeout(() => {
-                            opt.disabled = true;
-                        }, 0);
-                    });
-                    return;
-                }
-
-                setTimeout(() => {
-                    options.forEach(opt => {
-                        opt.style.backgroundColor = "";
-                        opt.disabled = false;
-                    });
-                }, 250);
-
-                streak++;
-            } else {
-                option.style.backgroundColor = "#BB2020";
-
-                option.animate([
-                    { transform: 'translateX(0px)' },
-                    { transform: 'translateX(-5px)' },
-                    { transform: 'translateX(5px)' },
-                    { transform: 'translateX(-5px)' },
-                    { transform: 'translateX(5px)' },
-                    { transform: 'translateX(0px)' }
-                ], {
-                    duration: 500,
-                    easing: 'ease-in-out'
-                });
-
-                center.innerHTML = `
-                <div class="p-5 min-w-96">
-                        <p class="text-2xl font-bold text-center">
-                            Game Over
-                        </p>
-
-                        <p class="text-6xl font-extrabold text-center mt-4">
-                            ${streak}
-                        </p>
-
-                        <p class="text-center mt-1">
-                            Streak
-                        </p>
-
-                        <div class="flex gap-3">
-                            <button onclick="initLeaderboard()"
-                                class="bg-background/60 rounded-lg border border-border shadow-md px-4 py-2 mt-6 font-bold hover:bg-opacity-95 active:scale-95 duration-150 w-full h-12">
-                                Lagre
-                            </button>
-                            <button onclick="randomize()"
-                                class="bg-background/60 rounded-lg border border-border shadow-md px-4 py-2 mt-6 font-bold hover:bg-opacity-95 active:scale-95 duration-150 w-full h-12">
-                                Spill Igjen
-                            </button>
-                        </div>
-                    </div>
-                    `;
-
-                center.animate([
-                    { opacity: 0, transform: 'translateY(-50%) translateX(-50%) scale(0.9)' },
-                    { opacity: 1, transform: 'translateY(-50%) translateX(-50%) scale(1)' },
-                ], {
-                    duration: 300,
-                    easing: "cubic-bezier(0.25, 1.15, 0.75, 1)",
-                });
-
-                colourPreview.style.backgroundColor = `rgba(${answer}, 0.15)`;
-
-                options[answerIndex].click();
-            }
-        };
-    });
-
-    function initLeaderboard() {
-        center.innerHTML = `
-                <div class="p-5 min-w-96">
-                        <p class="text-2xl font-bold text-center">
-                            Hva er navnet ditt?
-                        </p>
-
-                        <input id="name" class="text-6xl font-extrabold text-center text-text mt-4 bg-transparent w-full outline-none placeholder-text/50" autocomplete="off"
-                            type="text" placeholder="...">
-                        </input>
-
-                        <div class="flex">
-                            <button onclick="pushLeaderboard()"
-                                class="bg-background/60 rounded-lg border border-border shadow-md px-4 py-2 mt-6 font-bold hover:bg-opacity-95 active:scale-95 duration-150 w-full h-12">
-                                Lagre
-                            </button>
-                        </div>
-                    </div>
-                    `;
-
-        document.getElementById('name').focus();
-
-        center.animate([
-            { opacity: 0, transform: 'translateY(-50%) translateX(-50%) scale(0.9)' },
-            { opacity: 1, transform: 'translateY(-50%) translateX(-50%) scale(1)' },
-        ], {
-            duration: 300,
-            easing: "cubic-bezier(0.25, 1.15, 0.75, 1)",
-        });
-    };
-
-    function pushLeaderboard() {
-        const nameInput = document.getElementById('name');
-        const name = nameInput.value.trim().substring(0, 20) || "Anon";
-
-        leaderboardData.push({ name, streak });
-        loadLeaderboard();
-
-        localStorage.setItem('leaderboard', JSON.stringify(leaderboardData));
-
-        streak = 0;
-
-        randomize();
-    }
-
-    function loadLeaderboard() {
-        leaderboardData.sort((a, b) => b.streak - a.streak);
-
-        const leaderboard = document.getElementById('leaderboard');
-
-        leaderboard.innerHTML = "";
-
-        for (const [index, entry] of leaderboardData.entries()) {
-            const row = document.createElement('tr');
-            const newRow = document.createElement('tr');
-            const rankCell = document.createElement('td');
-            const nameCell = document.createElement('td');
-            const streakCell = document.createElement('td');
-
-            rankCell.innerText = index + 1;
-            nameCell.innerText = entry.name;
-            streakCell.innerText = entry.streak;
-
-            row.appendChild(rankCell);
-            row.appendChild(nameCell);
-            row.appendChild(streakCell);
-
-            leaderboard.appendChild(row);
-        }
-    }
-
-    refresh.onclick = () => {
-        randomize();
-    };
-
-    loadLeaderboard();
-    randomize();
-</script>
 
 </html>

@@ -1,0 +1,167 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #dcdcdc;
+    --background: #030303;
+    --primary: #9898cf;
+    --secondary: #161616;
+    --border: #2f2f2f;
+    --accent: #a25cb3;
+
+    --aside-width: 300px;
+}
+
+.plus-jakarta-sans {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.flex {
+    display: flex;
+}
+
+
+
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "main aside";
+
+    grid-template-rows: min-content 1fr;
+    grid-template-columns: 1fr var(--aside-width);
+
+    min-height: 100dvh;
+    overflow-x: hidden;
+
+    transition-duration: 300ms;
+}
+
+body.hide-leaderboard {
+    grid-template-columns: 1fr 0;
+}
+
+
+
+
+header {
+    grid-area: header;
+    background-color: rgba(255, 255, 255, 0.0375);
+    padding: 20px;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+main {
+    grid-area: main;
+    padding: 10px;
+}
+
+aside {
+    grid-area: aside;
+    background-color: rgba(255, 255, 255, 0.0375);
+    padding: 20px;
+
+    border-left: 1px solid var(--border);
+
+    width: var(--aside-width);
+}
+
+#logo {
+    max-height: 30px;
+}
+
+#tittel {
+    font-size: 24px;
+    font-family: "Darumadrop One";
+    font-weight: 500;
+}
+
+header {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    align-items: center;
+    text-align: center;
+
+    border-bottom: 1px solid var(--border);
+}
+
+
+
+
+
+#meny {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+#meny button {
+    background: var(--secondary);
+    border: 1px solid var(--border);
+
+    font-family: inherit;
+    color: inherit;
+
+    padding: 10px 15px;
+    cursor: pointer;
+
+    border-radius: 4px;
+}
+
+button:hover {
+    filter: brightness(120%);
+}
+
+button:active {
+    filter: brightness(80%);
+}
+
+
+
+
+table {
+    width: 100%;
+    text-align: center;
+    margin-top: 16px;
+}
+
+tr:hover {
+    background-color: rgba(255, 255, 255, 0.0375)
+}
+
+
+
+
+
+#game {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: red;
+}
+
+#spørsmål {
+    width: 100%;
+    padding: 10px;
+}
+
+#spørsmål>div {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background-color: var(--background);
+    width: 100%;
+    padding: 12px 10px;
+    text-align: center;
+}
