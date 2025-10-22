@@ -24,6 +24,7 @@ const COLOUR_FAIL = "#CC2020";
 const options = Array.from(document.querySelectorAll("#options > button"));
 let correctIndex = -1;
 let streak = -1;
+let streakToSave = 0;
 let mode = "CTR"; // RTC = RGB TO COLOUR    CTR = COLOUR TO RGB
 
 // leaderboard data/utils
@@ -74,12 +75,16 @@ function pushLeaderboard() {
         return;
     }
 
-    if (streak <= 0) {
+    if (streak != -1) {
+        alert("Du må spille ferdig først plis");
+    }
+
+    if (streakToSave <= 0) {
         alert("Streak må være litt større plis");
         return;
     }
 
-    leaderboardData.push({ name, streak });
+    leaderboardData.push({ name, streak: streakToSave });
     loadLeaderboard();
 
     localStorage.setItem('leaderboard', JSON.stringify(leaderboardData));
@@ -166,6 +171,7 @@ function randomize() {
                 }
             } else {
                 if (streak != -1) {
+                    streakToSave = streak;
                     streak = -1;
                 }
             }
