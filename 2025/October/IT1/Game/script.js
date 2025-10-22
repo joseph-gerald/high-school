@@ -24,7 +24,7 @@ const COLOUR_FAIL = "#CC2020";
 const options = Array.from(document.querySelectorAll("#options > button"));
 let correctIndex = -1;
 let streak = -1;
-let mode = "RTC"; // RTC = RGB TO COLOUR    CTR = COLOUR TO RGB
+let mode = "CTR"; // RTC = RGB TO COLOUR    CTR = COLOUR TO RGB
 
 // leaderboard data/utils
 
