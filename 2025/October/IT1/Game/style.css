@@ -271,15 +271,3 @@ td:nth-child(2) {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
     pointer-events: none;
 }
-
-
-
-#flame {
-    width: 60px;
-    height: 60px;
-
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-crisp-edges;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-}

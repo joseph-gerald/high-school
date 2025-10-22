@@ -26,6 +26,8 @@ let correctIndex = -1;
 let streak = -1;
 let mode = "RTC"; // RTC = RGB TO COLOUR    CTR = COLOUR TO RGB
 
+// leaderboard data/utils
+
 let leaderboardData = [];
 
 if (localStorage.getItem('leaderboard')) {
@@ -88,6 +90,12 @@ function pushLeaderboard() {
 }
 
 saveButton.onclick = pushLeaderboard;
+
+
+
+
+// spill logikk
+
 
 function rand(range) {
     // hvis range er null eller undefined, bruk 256
