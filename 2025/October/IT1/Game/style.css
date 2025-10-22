@@ -32,7 +32,7 @@
 }
 
 
-#registration > input {
+#registration>input {
     background-color: var(--border);
     border: none;
     padding: 12px 8px;
@@ -42,7 +42,7 @@
     font-family: inherit;
 }
 
-#registration > button {
+#registration>button {
     font-family: inherit;
     font-weight: bold;
     color: var(--background);
@@ -70,6 +70,7 @@ body {
     transition-duration: 300ms;
 }
 
+/* gjør widthen til høyre kolonen 0 så at den blir hjemt */
 body.hide-leaderboard {
     grid-template-columns: 1fr 0;
 }
@@ -105,7 +106,7 @@ aside {
     max-height: 30px;
 }
 
-#tittel {
+#tittel h1 {
     font-size: 2rem;
     font-family: "Darumadrop One";
     font-weight: 500;
@@ -191,12 +192,15 @@ td:nth-child(2) {
     transition-duration: 300ms;
 }
 
-#spørsmål {
+#tittel {
     width: 100%;
     padding: 10px;
+
+    position: relative;
+    transition-duration: 300ms;
 }
 
-#spørsmål>div {
+#tittel>div {
     border: 1px solid var(--border);
     background-color: var(--background);
     width: 100%;
@@ -204,6 +208,17 @@ td:nth-child(2) {
     text-align: center;
     position: relative;
     font-size: 1.25rem;
+}
+
+#spørsmål {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 5rem;
+
+    transition-duration: 300ms;
 }
 
 #submission {
@@ -222,7 +237,7 @@ td:nth-child(2) {
 }
 
 #randomize,
-#options > button {
+#options>button {
     padding: 34px 10px;
     width: 100%;
     background-color: var(--background);
@@ -234,6 +249,8 @@ td:nth-child(2) {
     user-select: none;
 
     transition-duration: 300ms;
+    
+    text-shadow: 0 0 2px rgba(0, 0, 0, 1.5);
 }
 
 #randomize {
@@ -253,4 +270,16 @@ td:nth-child(2) {
 
     background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
     pointer-events: none;
+}
+
+
+
+#flame {
+    width: 60px;
+    height: 60px;
+
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
