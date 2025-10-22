@@ -216,7 +216,7 @@ td:nth-child(2) {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 5rem;
+    font-size: 0rem;
 
     transition-duration: 300ms;
 }
