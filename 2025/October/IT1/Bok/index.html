@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="branding">
+            <img src="assets/logo.png" alt="">
+            <p>
+                Joseph's Bokbutikk
+            </p>
+        </div>
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="#populære">
+                        Populære
+                    </a>
+                </li>
+                <li>
+                    <a href="#romantiske">
+                        Romantiske
+                    </a>
+                </li>
+                <li>
+                    <a href="#sci-fi">
+                        Sci-fi
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <a href="#kontakt">
+            Om oss
+        </a>
+    </header>
+
+    <main>
+        <section id="populære">
+            <h2>
+                Populære bøker
+            </h2>
+
+            <div class="books">
+                <a href="" repeat="6">
+                    <article class="book">
+                        <div class="cover-container">
+                            <img src="assets/covers/surreptitious-software.jpeg" alt="Bok 1">
+                        </div>
+    
+                        <div class="data-container">
+                            <p class="price">
+                                100,-
+                            </p>
+                            <div>
+                                <h3>
+                                    Surreptitious Software
+                                </h3>
+                                <p>
+                                    Christian Collberg
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+            </div>
+        </section>
+        <section id="romantiske">
+            <h2>
+                Romantiske bøker
+            </h2>
+
+            <div class="books">
+                <a href="" repeat="6">
+                    <article class="book">
+                        <div class="cover-container">
+                            <img src="assets/covers/quan.jpg" alt="Bok 1">
+                        </div>
+    
+                        <div class="data-container">
+                            <p class="price">
+                                100,-
+                            </p>
+                            <div>
+                                <h3>
+                                    Old Thot Next Door
+                                </h3>
+                                <p>
+                                    Christian Collberg
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+            </div>
+        </section>
+        <section id="sci-fi">
+            <h2>
+                Sci-Fi bøker
+            </h2>
+
+            <div class="books">
+                <a href="" repeat="6">
+                    <article class="book">
+                        <div class="cover-container">
+                            <img src="assets/covers/tbp.jpg" alt="Bok 1">
+                        </div>
+    
+                        <div class="data-container">
+                            <p class="price">
+                                100,-
+                            </p>
+                            <div>
+                                <h3>
+                                    The Three-Body Problem
+                                </h3>
+                                <p>
+                                    Christian Collberg
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+            </div>
+        </section>
+
+
+        <section>
+            <h2 id="kontakt">
+                Kontakt
+            </h2>
+
+            <p>
+                Du kan besøke oss på Malmskriverveien 16, 1337 Sandvika
+            </p>
+
+            <br>
+
+            <p>
+                TLF: <a href="tel:12345678">123 45 678</a>
+            </p>
+            <p>
+                EPOST: <a href="mailto:BOK@JOOO.TECH">BOK@JOOO.TECH</a>
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="branding">
+            <img src="assets/logo.png" alt="">
+        </div>
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="#populære">
+                        Populære
+                    </a>
+                </li>
+                <li>
+                    <a href="#romantiske">
+                        Romantiske
+                    </a>
+                </li>
+                <li>
+                    <a href="#sci-fi">
+                        Sci-fi
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </footer>
+</body>
+<script>
+    document.querySelectorAll("[repeat]").forEach(el => {
+        const count = parseInt(el.getAttribute("repeat"));
+        for (let i = 1; i < count; i++) {
+            el.parentNode.appendChild(el.cloneNode(true));
+        }
+        el.removeAttribute("repeat");
+    });
+</script>
+
+</html>

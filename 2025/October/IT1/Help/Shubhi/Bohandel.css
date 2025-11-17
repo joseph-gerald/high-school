@@ -1,0 +1,44 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    display: flex;
+    gap: 1rem;
+    position: sticky;
+    border: solid 2px #1c2340;
+    background-color: aliceblue;
+}
+
+#headertop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 1rem;
+}
+
+img {
+    max-width: 100px;
+    height: auto;
+}
+
+nav {
+    display: flex;
+    gap: 2rem;
+    font-size: 1.5rem;
+}
+
+.headerup {
+    width: 100%;
+}
+
+#populære {
+    display: flex;
+    gap: 4rem;
+}
+
+article {
+    display: flex;
+}

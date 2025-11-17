@@ -1,0 +1,155 @@
+:root {
+    --text: #0b0d13;
+    --background: #f4f5f9;
+    --primary: #5966ae;
+    --secondary: #a1a9d6;
+    --accent: #7986cc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+    font-family: "Plus Jakarta Sans";
+    width: 100vw;
+    height: 100dvh;
+    overflow-x: hidden;
+}
+
+footer,
+header {
+    padding: 10px;
+    border-bottom: 1px solid var(--text);
+    background: rgba(0, 0, 0, 1);
+    color: white;
+
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: stretch;
+    text-align: center;
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header a[href="#kontakt"] {
+    text-align: right;
+    margin-right: 8px;
+}
+
+.branding {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-weight: 600;
+}
+
+.branding img {
+    max-height: 40px;
+}
+
+nav {
+    height: min-content;
+}
+
+ul {
+    list-style-type: none;
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    align-items: center;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+main {
+    margin: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+section > h2 {
+    margin-bottom: 20px;
+}
+
+.books {
+    display: flex;
+    overflow-y: none;
+    overflow-x: auto;
+    gap: 16px;
+}
+
+.book {
+    background: rgba(0, 0, 0, 0.05);
+    width: min-content;
+    position: relative;
+}
+
+.book .cover-container {
+    background: rgba(0, 0, 0, 0.05);
+    min-width: 231px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.book .cover-container img {
+    max-height: 300px;
+    padding: 8px;
+}
+
+.book .data-container {
+    padding: 16px;
+    max-width: 231px;
+    color: rgba(0,0,0, 0.65);
+}
+
+.book .data-container .price {
+    font-size: 16px;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.book .data-container h3 {
+    font-size: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: black;
+}
+
+
+@media (max-width: 768px) {
+    header,
+    footer {
+        grid-template-columns: 1fr;
+        text-align: center;;
+        row-gap: 12px;
+    }
+
+    .branding {
+        justify-content: center;
+    }
+
+    header a[href="#kontakt"] {
+        text-align: center;
+        margin: 0;
+    }
+
+    main {
+        margin: 30px;
+    }
+}

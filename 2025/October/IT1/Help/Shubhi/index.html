@@ -1,0 +1,143 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shubhi M Bokhandel</title>
+    
+  <link rel="stylesheet" href="Bohandel.css?_cacheOverride=1762958007606" .css=""></head>
+  <body>
+    <header>
+      <img src="logo.webp" alt="logo">
+      <div class="headerup">
+        <section id="headertop">
+          <h1>Shubhi's bookstore</h1>
+          <a href="#Om oss">Om oss</a>
+          <!-- ned til foooter-->
+        </section>
+        <nav>
+          <a href="#Populære">Populære</a>
+          <a href="#Romantiske">Romantiske</a>
+          <a href="#Sci-fi">Sci-fi</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <section id="populære">
+        <article class="New_Book">
+          <img src="It ends with us.webp">
+          <div>
+            <p>It ends with us</p>
+            <p>100kr</p>
+            <p>Collen Hoover</p>
+          </div>
+        </article>
+        <article class="New_Book">
+          <img src="Good girls guide to murder.webp">
+          <div>
+            <p>A Good Girls Guide To murder</p>
+            <p>100kr</p>
+            <p>Holly Jackson</p>
+          </div>
+        </article>
+        <article class="New_Book">
+          <img src="Harry Potter.jpeg">
+          <div>
+            <p>Harry Potter and the chamber of secrets</p>
+            <p>100kr</p>
+            <p>J.K Rowling</p>
+          </div>
+        </article>
+      </section>
+      <section id="Sci-fi">
+        <article class="New_Book">
+          <img src="It ends with us.webp">
+          <div>
+            <p>It ends with us</p>
+            <p>100kr</p>
+            <p>Collen Hoover</p>
+          </div>
+        </article>
+        <article class="New_Book">
+          <img src="Good girls guide to murder.webp">
+          <div>
+            <p>A Good Girls Guide To murder</p>
+            <p>100kr</p>
+            <p>Holly Jackson</p>
+          </div>
+        </article>
+        <article class="New_Book">
+          <img src="Harry Potter.jpeg">
+          <div>
+            <p>Harry Potter and the chamber of secrets</p>
+            <p>100kr</p>
+            <p>J.K Rowling</p>
+          </div>
+        </article>
+      </section>
+      <section id="Romantiske">
+        <article class="New_Book">
+          <img src="It ends with us.webp">
+          <div>
+            <p>It ends with us</p>
+            <p>100kr</p>
+            <p>Collen Hoover</p>
+          </div>
+        </article>
+        <article class="New_Book">
+          <img src="Good girls guide to murder.webp">
+          <div>
+            <p>A Good Girls Guide To murder</p>
+            <p>100kr</p>
+            <p>Holly Jackson</p>
+          </div>
+        </article>
+        <article class="New_Book">
+          <img src="Harry Potter.jpeg">
+          <div>
+            <p>Harry Potter and the chamber of secrets</p>
+            <p>100kr</p>
+            <p>J.K Rowling</p>
+          </div>
+        </article>
+      </section>
+    </main>
+  <!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+
+</body></html>

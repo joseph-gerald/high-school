@@ -146,6 +146,12 @@ header {
     border-radius: 4px;
 }
 
+button:disabled {
+    filter: none !important;
+    opacity: 1 !important;
+    cursor: not-allowed !important;
+}
+
 button:hover {
     cursor: pointer;
     filter: brightness(120%);
