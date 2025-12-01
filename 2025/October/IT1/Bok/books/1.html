@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="branding">
+            <img src="../assets/logo.png" alt="">
+            <p>
+                Joseph's Bokbutikk
+            </p>
+        </div>
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="../#populære">
+                        Populære
+                    </a>
+                </li>
+                <li>
+                    <a href="../#romantiske">
+                        Romantiske
+                    </a>
+                </li>
+                <li>
+                    <a href="../#sci-fi">
+                        Sci-fi
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <a href="#contact">
+            Om oss
+        </a>
+    </header>
+
+    <main>
+        <section class="book-preview">
+            <img src="../assets/covers/surreptitious-software.jpeg" alt="">
+
+            <section>
+                <article>
+                    <h1>
+                        Surreptitious Software
+                    </h1>
+                    <p>
+                        Av Christian Collberg
+                    </p>
+
+                    <p>
+                        The last decade has seen significant progress in the development of techniques for resisting
+                        software
+                        piracy and tampering. These techniques are indispensable for software developers seeking to
+                        protect
+                        vital intellectual property. Surreptitious Software is the first authoritative, comprehensive
+                        resource
+                        for researchers, developers, and students who want to understand these approaches, the level of
+                        security
+                        they afford, and the performance penalty they incur.
+                    </p>
+
+                    <p class="quote">
+                        <img src="../assets/icons/quote.svg" alt="">
+                        Surreptitious software is the term we have chosen to describe a new branch of
+                        computer security research that has emerged over the last decade. It’s a field that
+                        borrows techniques not only from computer security, but also from many other
+                        areas of computer science, such as cryptography, steganography, media watermarking, software
+                        metrics, reverse engineering, and compiler optimization. Surreptitious
+                        software applies these techniques in order to solve very different problems: It is concerned
+                        with protecting the secrets contained within computer programs.
+                    </p>
+                </article>
+                <article>
+                    <h2>
+                        Forfatteren
+                    </h2>
+
+
+                    <img src="https://www.oreilly.com/api/v2/epubs/urn:orm:book:9780321591258/files/graphics/author_01.jpg"
+                        alt="">
+
+                    <p>
+                        Christian Collberg received a B.Sc. in computer science and numerical analysis and a Ph.D. in
+                        computer science from Lund University, Sweden. He is currently an associate professor in the
+                        department of computer science at the University of Arizona and has also worked at the
+                        University of
+                        Auckland, New Zealand, and the Chinese Academy of Sciences in Beijing. Professor Collberg is a
+                        leading researcher in the intellectual property protection of software, and also maintains an
+                        interest in compiler and programming language research. In his spare time he writes songs,
+                        sings,
+                        and plays guitar for The Zax and hopes one day to finish his ...
+                    </p>
+                </article>
+            </section>
+        </section>
+    </main>
+
+    
+    <footer>
+        <div class="branding">
+            <img src="../assets/logo.png" alt="">
+        </div>
+
+        <div class="info" id="contact">
+            <a href="https://share.google/dgM6Ex0ejYqTjdgyu">
+                <img src="../assets/icons/location.svg" alt="">
+                Malmskriverveien 16, 1337 Sandvika
+            </a>
+
+            <a href="tel:12345678">
+                <img src="../assets/icons/phone.svg" alt="">
+                123 45 678
+            </a>
+
+            <a href="mailto:BOK@JOOO.TECH">
+                <img src="../assets/icons/mail.svg" alt="">
+                bok@jooo.tech
+            </a>
+        </div>
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="../#populære">
+                        Populære
+                    </a>
+                </li>
+                <li>
+                    <a href="../#romantiske">
+                        Romantiske
+                    </a>
+                </li>
+                <li>
+                    <a href="../#sci-fi">
+                        Sci-fi
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </footer>
+</body>
+<script>
+    document.querySelectorAll("[repeat]").forEach(el => {
+        const count = parseInt(el.getAttribute("repeat"));
+        for (let i = 1; i < count; i++) {
+            el.parentNode.appendChild(el.cloneNode(true));
+        }
+        el.removeAttribute("repeat");
+    });
+</script>
+
+</html>

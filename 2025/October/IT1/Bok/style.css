@@ -39,9 +39,13 @@ header {
     z-index: 1000;
 }
 
-header a[href="#kontakt"] {
+footer {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+header a[href="#contact"] {
     text-align: right;
-    margin-right: 8px;
+    margin-right: 20px;
 }
 
 .branding {
@@ -77,6 +81,7 @@ main {
     display: flex;
     flex-direction: column;
     gap: 60px;
+    align-items: center;
 }
 
 section > h2 {
@@ -151,5 +156,91 @@ section > h2 {
 
     main {
         margin: 30px;
+    }
+}
+
+.book-preview {
+    display: flex;
+    gap: 40px;
+}
+
+.book-preview > section {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    max-width: 600px;
+}
+
+.book-preview > section h1 + p {
+    margin-bottom: 24px;
+    opacity: 0.85;
+}
+
+.book-preview > section h2 {
+    margin-bottom: 12px;
+}
+
+.book-preview > section article > img {
+    float: left;
+    margin-right: 16px;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.book-preview > img {
+    max-height: 500px;
+    position: sticky;
+    top: 92px;
+}
+
+.book-preview .quote {
+    font-style: italic;
+    background-color: rgba(0, 0, 0, 1);
+    padding: 16px;
+    color: #e3e3e3;
+    margin-top: 32px;
+}
+
+
+.book-preview .quote img {
+    float: left;
+    width: 40px;
+    margin-right: 8px;
+    transform: translate(-4px, -4px);
+}
+
+footer .info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+
+    grid-column: span 3;
+    justify-content: center;
+}
+
+footer .info a {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+footer .info a:hover {
+    background-color: black;
+    filter: invert(100%);
+}
+
+footer .info img {
+    max-height: 20px;
+}
+
+@media (max-width: 768px) {
+    .book-preview {
+        flex-direction: column;
+    }
+
+    .book-preview > img {
+        position: static;
+        max-width: 100%;
+        margin: 0 auto;
     }
 }

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="branding">
+            <img src="../assets/logo.png" alt="">
+            <p>
+                Joseph's Bokbutikk
+            </p>
+        </div>
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="../#populære">
+                        Populære
+                    </a>
+                </li>
+                <li>
+                    <a href="../#romantiske">
+                        Romantiske
+                    </a>
+                </li>
+                <li>
+                    <a href="../#sci-fi">
+                        Sci-fi
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <a href="#contact">
+            Om oss
+        </a>
+    </header>
+
+    <main>
+        <section class="book-preview">
+            <img src="../assets/covers/tbp.jpg" alt="">
+
+            <section>
+                <article>
+                    <h1>
+                        Old Thot Next Door
+                    </h1>
+                    <p>
+                        Av Quan Millz
+                    </p>
+
+                    <p>
+                        OLD THOT NEXT DOOR is indeed a long-anticipated ratchet soap opera thriller by bestselling
+                        African-American Urban Fiction author QUAN MILLZ.
+                        <br>
+                        <br>
+                        Meet Vernita Ernestine Washington, a feisty 76-year-old woman who doesn’t care what you think
+                        about her ways, especially for a woman her age. Yeah, she might be a senior citizen but she’d be
+                        the first to tell you AGE AIN'T NOTHING BUT A NUMBER!
+                    </p>
+
+                    <p class="quote">
+                        <img src="../assets/icons/quote.svg" alt="">
+                        BABY! LET ME TELL YOU ONE MOTHAFUCKIN’ THANG! I don’t give a damn what you think about me and my
+                        age. Yeah, I might be 76-years-old but this big, thick pussy between my toned brown legs don’t
+                        act like it!
+                        <br>
+                        <br>
+                        Don’t let the gray hairs fool you now!
+                        My name is Vernita Ernestine Washington and I ain’t ashamed to admit that I loves to drink brown
+                        liquor, smoke good reefur AND most definitely get my fuck on! Uh-huh! You heard that right! Yup!
+                        I loves to ride me a big ole black dick!
+                        <br>
+                        <br>
+                        Age ain’t nothin’ but a number, baby doll. My body felt like I was still forty. And you best
+                        believe I fucked like I was still forty!
+                        <br>
+                        <br>
+                        If you are blessed to live a long life, you’ll see just exactly what I meant.
+                        Now for all you young folk out there, I can let you in on the secret if you were wondering what
+                        I did to stay so young and vibrant.
+                    </p>
+                </article>
+                <article>
+                    <h2>
+                        Forfatteren
+                    </h2>
+
+
+                    <img src="https://www.oreilly.com/api/v2/epubs/urn:orm:book:9780321591258/files/graphics/author_01.jpg"
+                        alt="">
+
+                    <p>
+                        Christian Collberg received a B.Sc. in computer science and numerical analysis and a Ph.D. in
+                        computer science from Lund University, Sweden. He is currently an associate professor in the
+                        department of computer science at the University of Arizona and has also worked at the
+                        University of
+                        Auckland, New Zealand, and the Chinese Academy of Sciences in Beijing. Professor Collberg is a
+                        leading researcher in the intellectual property protection of software, and also maintains an
+                        interest in compiler and programming language research. In his spare time he writes songs,
+                        sings,
+                        and plays guitar for The Zax and hopes one day to finish his ...
+                    </p>
+                </article>
+            </section>
+        </section>
+    </main>
+
+
+    <footer>
+        <div class="branding">
+            <img src="../assets/logo.png" alt="">
+        </div>
+
+        <div class="info" id="contact">
+            <a href="https://share.google/dgM6Ex0ejYqTjdgyu">
+                <img src="../assets/icons/location.svg" alt="">
+                Malmskriverveien 16, 1337 Sandvika
+            </a>
+
+            <a href="tel:12345678">
+                <img src="../assets/icons/phone.svg" alt="">
+                123 45 678
+            </a>
+
+            <a href="mailto:BOK@JOOO.TECH">
+                <img src="../assets/icons/mail.svg" alt="">
+                bok@jooo.tech
+            </a>
+        </div>
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="../#populære">
+                        Populære
+                    </a>
+                </li>
+                <li>
+                    <a href="../#romantiske">
+                        Romantiske
+                    </a>
+                </li>
+                <li>
+                    <a href="../#sci-fi">
+                        Sci-fi
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </footer>
+</body>
+<script>
+    document.querySelectorAll("[repeat]").forEach(el => {
+        const count = parseInt(el.getAttribute("repeat"));
+        for (let i = 1; i < count; i++) {
+            el.parentNode.appendChild(el.cloneNode(true));
+        }
+        el.removeAttribute("repeat");
+    });
+</script>
+
+</html>

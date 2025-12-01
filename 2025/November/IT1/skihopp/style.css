@@ -19,15 +19,18 @@ body {
 .grid {
     display: grid;
     grid-template-areas: 
-        "header header header"
-        "decoration main main"
-        "footer footer footer";
+        "header header"
+        "decoration main"
+        "footer footer";
+    grid-template-rows: 15% 50% 35%;
+    grid-template-columns: 35% 65%;
 
-    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-    max-width: 900px;
+    max-width: 640px;
+    max-height: 640px;
 
     margin: auto;
+    overflow: hidden;
 }
 
 .grid > * {
@@ -51,7 +54,7 @@ header {
 
 .decoration {
     grid-area: decoration;
-    height: 500px;
+    height: 100%;
     width: 100%;
     object-fit: cover;
     object-position: 30%;
