@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/index.css">
+    <title>Hello World</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="tailwind.config.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-background text-text font-body">
+    <div id="init-container"
+        class="bg-background w-screen h-dvh flex flex-col fixed left-0 top-0 justify-center items-center gap-8 z-50">
+        <h1 class="text-3xl font-bold">
+            Velg navnet ditt
+        </h1>
+
+        <input id="name" class="border-b border-text p-3 px-4 outline-none bg-highlight min-w-64 text-lg"
+            placeholder="Navnet ditt" autocomplete="off">
+    </div>
+
+    <div class="w-screen min-h-dvh flex flex-col justify-center items-center">
+
+        <code id="test">
+
+        </code>
+
+        <div id="main-container" class="font-bold text-lg text-background flex flex-col gap-1.5">
+            <button id="select-num" class="py-24 px-4 bg-text text-[108px] hover:bg-text/80 duration-150 rounded-sm" onclick="alert('yosyas yonas woldeab')">
+                83
+            </button>
+            <div class="flex gap-1.5">
+                <button id="select-fizz" class="py-3 px-6 bg-text hover:bg-text/80 duration-150 rounded-sm">
+                    Fizz
+                </button>
+                <button id="select-fizzbuzz" class="py-3 px-6 bg-text hover:bg-text/80 duration-150 rounded-sm">
+                    FizzBuzz
+                </button>
+                <button id="select-buzz" class="py-3 px-6 bg-text hover:bg-text/80 duration-150 rounded-sm">
+                    Buzz
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const mainContainer = document.getElementById("main-container");
+    const initContainer = document.getElementById("init-container");
+    const nameInput = document.getElementById("name");
+    const user = {
+        name: null
+    };
+
+    const SELECT = {
+        NUM: document.getElementById("select-num"),
+        FIZZ: document.getElementById("select-fizz"),
+        FIZZBUZZ: document.getElementById("select-fizzbuzz"),
+        BUZZ: document.getElementById("select-buzz"),
+    }
+
+    if (window.localStorage.getItem("name")) {
+        user.name = window.localStorage.getItem("name");
+    }
+
+    const isLocalhost = window.location.host.indexOf("localhost") == 0 || window.location.host.indexOf('127.0.0.1') == 0;
+    const protocol = location.protocol == "http:" ? "ws://" : "wss://";
+
+    const socket = new WebSocket(protocol + window.location.host);
+    let gameState = {};
+
+    socket.onclose = () => {
+        location.reload();
+    }
+
+    function send(type, data) {
+        socket.send(JSON.stringify({
+            type,
+            data
+        }))
+    }
+
+    socket.onopen = () => {
+        let keepaliveCount = 0;
+
+        setInterval(() => { socket.send("keepalive/" + keepaliveCount++); }, 60 * 1000);
+
+        send("init", user);
+    }
+
+    socket.onmessage = (message) => {
+        const raw = JSON.parse(message.data);
+        const { type, data } = raw;
+
+        switch (type) {
+            case "update":
+                gameState = data;
+
+                if (SELECT.NUM.innerHTML != data.num) {1
+                    mainContainer.animate([
+                        {
+                            opacity: 0,
+                            transform: "scale(0.8)"
+                        },
+                        {
+                            opacity: 1,
+                            transform: "scale(1.03)"
+                        },
+                        {
+                            opacity: 1,
+                            transform: "scale(0.99)"
+                        },
+                        {
+                            opacity: 1,
+                            transform: "scale(1)"
+                        }
+                    ], {
+                        duration: 300,
+                        easing: "ease-in-out"
+                    });
+                }
+
+                SELECT.NUM.innerHTML = data.num;
+
+                document.getElementById("test").innerHTML = JSON.stringify(data.players.map(x => {
+                    console.log(x);
+                    delete x.client;
+                    return x;
+                }))
+                break;
+        }
+    }
+
+    async function answer(answer) {
+        send("answer", answer);
+    }
+
+    function highlight(elm) {
+        elm.animate([
+            {
+                opacity: 0,
+            },
+            {
+                opacity: 1
+            }
+        ], {
+            duration: 300,
+            easing: "ease-in-out"
+        });
+    }
+
+    SELECT.NUM.onclick = () => {
+        answer("n");
+        highlight(SELECT.NUM);
+    }
+
+    SELECT.FIZZ.onclick = () => {
+        answer("f");
+        highlight(SELECT.FIZZ);
+    }
+
+    SELECT.FIZZBUZZ.onclick = () => {
+        answer("fb")
+        highlight(SELECT.FIZZBUZZ);
+    }
+
+    SELECT.BUZZ.onclick = () => {
+        answer("b")
+        highlight(SELECT.BUZZ);
+    }
+
+    async function init() {
+        initContainer.animate([
+            { opacity: 1 },
+            { opacity: 0 }
+        ], {
+            duration: 300,
+            easing: "ease-in-out",
+            fill: "forwards"
+        }).onfinish = () => {
+            initContainer.classList.add("hidden");
+        };
+    }
+
+    nameInput.onkeypress = (e) => {
+        console.log(e)
+        if (e.key === "Enter") {
+            user.name = nameInput.value;
+            window.localStorage.setItem("name", user.name);
+
+            init();
+        }
+    }
+
+    if (user.name != null) {
+        init();
+    }
+
+    document.documentElement.addEventListener("keydown", event => {
+        switch (event.keyCode) {
+            case 37:
+                SELECT.FIZZ.click();
+                break;
+            case 38:
+                SELECT.NUM.click();
+                break;
+            case 39:
+                SELECT.BUZZ.click();
+                break;
+            case 40:
+                SELECT.FIZZBUZZ.click();
+                break;
+        }
+    });
+</script>
+
+</html>

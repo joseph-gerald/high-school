@@ -81,7 +81,6 @@ main {
     display: flex;
     flex-direction: column;
     gap: 60px;
-    align-items: center;
 }
 
 section > h2 {

@@ -1,0 +1,96 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    min-height: 100dvh;
+    align-items: center;
+
+    color: #f6f5f4;
+}
+
+main {
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    grid-template-areas:
+        "tittel"
+        "tabell"
+        "tabell"
+        "bilder"
+        "bilder"
+        "bilder";
+    height: 500px;
+    width: 460px;
+    overflow: hidden;
+    margin: auto;
+
+    border: 3px solid #000;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+main>* {
+    border: 3px solid #000;
+}
+
+.tittel {
+    grid-area: tittel;
+    width: 100%;
+    background: #3f5765;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+}
+
+.tabell {
+    grid-area: tabell;
+    background: #bdd4de;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 10px;
+}
+
+
+.bilder {
+    display: flex;
+    grid-area: bilder;
+    width: 100%;
+    overflow: hidden;
+}
+
+.bilder img {
+    width: calc(100% / 3);
+    object-fit: cover;
+}
+
+table {
+    border-spacing: 0;
+    border-bottom: 2px solid #3f4259;
+}
+
+
+th,
+td {
+    border: 1px solid #f6f5f4;
+    padding: 8px 10px;
+}
+
+
+thead {
+    background: #3f4259;
+}
+
+tbody {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: black;
+
+}
+
+tbody tr:nth-child(odd) {
+    background-color: white;
+}

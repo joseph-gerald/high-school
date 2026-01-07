@@ -22,13 +22,12 @@ body {
         "header header"
         "decoration main"
         "footer footer";
-        
-    grid-template-rows: 15fr 50fr 35fr;
-    grid-template-columns: 35fr 65fr;
+    grid-template-rows: 15% 50% 35%;
+    grid-template-columns: 35% 65%;
 
     gap: 8px;
-    max-width: 40rem;
-    max-height: 40rem;
+    max-width: 640px;
+    max-height: 640px;
 
     margin: auto;
     overflow: hidden;
@@ -36,8 +35,6 @@ body {
 
 .grid > * {
     border: 2px solid #1a2025;
-    min-height: 0;
-    min-width: 0;
 }
 
 ol {
@@ -52,10 +49,7 @@ header {
     grid-area: header;
     background-color: #3f5765;
     color: white;
-    padding: 0 24px;
-
-    display: flex;
-    align-items: center;
+    padding: 32px 24px;
 }
 
 .decoration {
@@ -78,7 +72,7 @@ footer {
     max-height: 300px;
 }
 
-footer * {
+footer img {
     width: 100%;
     height: 100%;
     object-fit: cover;
