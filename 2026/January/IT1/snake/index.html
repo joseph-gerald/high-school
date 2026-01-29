@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body style="margin: 0; overflow: hidden;">
+    <canvas id="canvas"></canvas>
+</body>
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let tickCount = 0;
+    let lastInputTick;
+
+    const grid = {
+        apple: [5,5],
+        girth: 0,
+        chodeness: 20,
+        height: 20,
+        width: 20,
+    }
+
+    const snake = {
+        length: 3,
+        pos: [[0,0]],
+        direction: "d"
+    }
+
+    function resize() {
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+    }
+
+    window.onresize = resize;
+
+    function drawGrid() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "black";
+
+        for (let i = 0; i <= grid.height; i++) {
+            ctx.fillRect(0, grid.chodeness * i, grid.width * grid.chodeness, grid.girth);
+        }
+
+        for (let i = 0; i <= grid.width; i++) {
+            ctx.fillRect(grid.chodeness * i, 0, grid.girth, grid.width * grid.chodeness);
+        }
+    }
+
+    function drawSnake() {
+        for (const pos of snake.pos) {
+            fillCell(pos[0], pos[1], "green");
+        }
+    }
+
+    function fillCell(x,y,color) {
+        const gridX = grid.chodeness * x;
+        const gridY = grid.chodeness * y;
+
+        ctx.fillStyle = color;
+        ctx.fillRect(gridX, gridY, grid.chodeness, grid.chodeness);
+    }
+
+    function init() {
+        resize();
+        drawGrid();
+    }
+
+    function gameLoop() {
+        tickCount++;
+
+        drawGrid();
+        const currentHead = structuredClone(snake.pos[snake.pos.length - 1]);
+
+        fillCell(grid.apple[0], grid.apple[1], "red")
+
+        switch (snake.direction) {
+            case "w":
+                currentHead[1] -= 1;
+                break;
+            case "s":
+                currentHead[1] += 1;
+                break;
+            case "a":
+                currentHead[0] -= 1;
+                break;
+            case "d":
+                currentHead[0] += 1;
+                break;
+        }
+
+        console.log(currentHead, grid.apple)
+        if (currentHead[0] == grid.apple[0] && currentHead[1] == grid.apple[1]) {
+            snake.length++;
+
+            grid.apple = snake.pos[0];
+            
+            while (snake.pos.some(pos => grid.apple[0] == pos[0] && grid.apple[1] == pos[1])) {
+                grid.apple = [Math.floor(Math.random() * grid.width),Math.floor(Math.random() * grid.height)]
+            }
+        }
+
+        if (snake.pos.some(posi => posi[0] == currentHead[0] && posi[1] == currentHead[1])) {
+            location.reload();
+        }
+
+        snake.pos.push(currentHead);
+        
+        console.log(snake.pos.length, snake.length)
+        while (snake.pos.length > snake.length) snake.pos.shift(1,2);
+        drawSnake();
+    }
+
+    window.onkeydown = (e) => {
+        if (lastInputTick == tickCount) return;
+        lastInputTick = tickCount;
+
+        console.log(e.key)
+
+        switch (e.key) {
+            case "ArrowUp":
+            case "w":
+                if (snake.direction == "s") break;
+                snake.direction = "w";
+                break;
+            case "ArrowLeft":
+            case "a":
+                if (snake.direction == "d") break;
+                snake.direction = "a";
+                break;
+            case "ArrowDown":
+            case "s":
+                if (snake.direction == "w") break;
+                snake.direction = "s";
+                break;
+            case "ArrowRight":
+            case "d":
+                if (snake.direction == "a") break;
+                snake.direction = "d";
+                break;
+        }
+    }
+
+    setInterval(gameLoop, 100);
+
+    init();
+</script>
+
+</html>

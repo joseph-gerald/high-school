@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="prefetch" href="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHhqbWtjMmNlcXRpczBpMTd4a2lxdzJ1cHR6dm9oOXAya2QxMmFtNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/fNVbgRcEjBKHho18gK/giphy.gif">
+    <link rel="prefetch" href="https://www.shutterstock.com/image-vector/do-not-feed-goat-ban-600w-1296009799.jpg">
+
+</head>
+
+<body>
+    <div id="container">
+    </div>
+</body>
+<script>
+    const doorCount = 10;
+    const container = document.getElementById("container");
+    
+    for (let i = 0; i < doorCount; i++) {
+        container.innerHTML += `
+        
+        <div>
+            <img src="https://placehold.co/400x400?text=D%C3%B8r%201" alt="">
+        </div>
+        `;
+    }
+
+    const cards = Array.from(container.children);
+    const theCardToAppoint = Math.floor(Math.random() * doorCount);
+
+    cards.forEach((elm, i) => {
+        const imgElm = elm.querySelector("img");
+
+        imgElm.src = `https://placehold.co/300x300?text=Dør ${i + 1}`;
+
+        imgElm.onclick = () => {
+            imgElm.animate([
+                { transform: 'rotateY(0deg)' },
+                { transform: 'rotateY(90deg)' }
+            ], {
+                duration: 250,
+                    easing: "ease-in"
+            }).onfinish = () => {
+                if (i == theCardToAppoint) {
+                    imgElm.src = "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSRuMdGJoDeH-3CNIenasVEYdNpCszU7PYdiTasaH2XiLN0Qf9PoLHDBRn62SVkq-j1vs_zJNR-tzEwvF4"
+                } else {
+                    imgElm.src = "https://www.shutterstock.com/image-vector/do-not-feed-goat-ban-600w-1296009799.jpg"
+                }
+
+                imgElm.animate([
+                    { transform: 'rotateY(90deg)' },
+                    { transform: 'rotateY(0deg)' }
+                ], {
+                    duration: 250,
+                    easing: "ease-out"
+                });
+            }
+        }
+    })
+</script>
+<style>
+    #container {
+        flex-wrap: wrap;
+        display: flex;
+        gap: 16px;
+    }
+
+    img {
+        width: 300px;
+        height: 300px;
+    }
+</style>
+
+</html>

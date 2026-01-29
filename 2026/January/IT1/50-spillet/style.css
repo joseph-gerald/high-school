@@ -1,0 +1,167 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+    /* Firefox */
+}
+
+input {
+    outline: none;
+}
+
+.ubuntu-light {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.ubuntu-regular {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.ubuntu-medium {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.ubuntu-bold {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.ubuntu-light-italic {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.ubuntu-regular-italic {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.ubuntu-medium-italic {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.ubuntu-bold-italic {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+}
+
+
+
+
+/*
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+*/
+
+
+
+
+#players-input,
+#decrease-players,
+#increase-players {
+    height: 40px;
+    width: 40px;
+    text-align: center;
+}
+
+#start-btn {
+    width: 100%;
+}
+
+.point-counter {
+    font-size: 32px;
+}
+
+#actions-container {
+    flex-direction: column;
+    display: flex;
+    gap: 4px;
+}
+
+#players-container {
+    display: flex;
+    gap: 16px;
+    
+    max-width: 826px;
+
+    flex-wrap: wrap;
+}
+
+.player-container {
+    background: #00000010;
+    padding: 12px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    border-radius: 2px;
+    border: 1px outset #00000090;
+    text-align: center;
+    opacity: 0.45;
+    
+    transition-duration: 300ms;
+    position: relative;
+}
+
+.player-container.active {
+    opacity: 1;
+    transform: translateY(-4px);
+}
+
+.mono {
+    font-family: "Sometype Mono", monospace;
+}
+
+.player-name {
+    text-align: center;
+    background: none;
+    border: none;
+    border-bottom: 1px solid black;
+    max-width: 64px;
+}
+
+body>div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 32px;
+
+    justify-content: center;
+    align-items: center;
+    min-height: 100dvh;
+}
+
+
+body>div>div {
+    display: flex;
+    flex-direction: column;
+    gap: 12px
+}
+
+#players-init-container {
+    width: fit-content;
+    margin: auto;
+}
