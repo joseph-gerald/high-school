@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phototransistor 720x480</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #121212;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #eee;
+        }
+        /* Compact UI Panel */
+        #ui-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 180px; /* Reduced width */
+            background: rgba(20, 20, 25, 0.9);
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+        h2 { 
+            margin: 0 0 10px 0; 
+            color: #4facfe; 
+            font-size: 0.9rem; /* Smaller font */
+            border-bottom: 1px solid #555; 
+            padding-bottom: 5px; 
+        }
+        
+        /* Compact Bars */
+        .bar-container { margin-bottom: 8px; }
+        .bar-label { 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 0.65rem; 
+            color: #aaa; 
+            margin-bottom: 3px; 
+        }
+        .bar-bg { width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden; }
+        .bar-fill { height: 100%; }
+        
+        .fill-static { width: 100%; background: linear-gradient(90deg, #ff4444, #ff8888); }
+        .fill-dynamic { width: 0%; background: linear-gradient(90deg, #00f260, #00ff88); transition: width 0.1s; }
+
+        /* Compact Controls */
+        .control-group { margin-top: 10px; border-top: 1px dashed #444; padding-top: 10px; }
+        label { display: block; color: #ffd700; font-weight: bold; margin-bottom: 4px; font-size: 0.75rem;}
+        input[type="range"] { width: 100%; cursor: pointer; height: 5px; }
+        
+        .note { font-size: 0.6rem; color: #777; margin-top: 5px; line-height: 1.2; }
+    </style>
+</head>
+<body>
+
+<div id="ui-panel">
+    <h2>Power Analysis</h2>
+
+    <!-- Static Bar -->
+    <div class="bar-container">
+        <div class="bar-label">
+            <span>POTENTIAL (V)</span>
+            <span style="color:#fff">9V (CONST)</span>
+        </div>
+        <div class="bar-bg"><div class="bar-fill fill-static"></div></div>
+    </div>
+
+    <!-- Dynamic Bar -->
+    <div class="bar-container">
+        <div class="bar-label">
+            <span>POWER (W)</span>
+            <span id="powerText">0.00 W</span>
+        </div>
+        <div class="bar-bg"><div class="bar-fill fill-dynamic" id="powerBar"></div></div>
+    </div>
+
+    <div class="control-group">
+        <label>Light Intensity</label>
+        <input type="range" id="slider" min="0" max="100" value="0">
+    </div>
+
+    <div class="note">
+        Battery provides constant voltage pressure (Red), but current only flows when light hits the Base.
+    </div>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const slider = document.getElementById('slider');
+    const powerBar = document.getElementById('powerBar');
+    const powerText = document.getElementById('powerText');
+
+    let W, H;
+    let lightInput = 0;
+    let currentFlow = 0; 
+    let voltage = 9.0;
+
+    // --- Scaled Dimensions for 720x480 ---
+    // Transistor Box
+    const transW = 70;
+    const transH = 120; 
+    
+    // Circuit Loop Radius (from center)
+    const loopRadW = 160; 
+    const loopRadH = 120; 
+
+    // Particles
+    const electrons = [];
+    const photons = [];
+
+    function resize() {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+        
+        electrons.length = 0;
+        for(let i=0; i<50; i++) { // Fewer electrons for smaller screen
+            electrons.push({ offset: Math.random() });
+        }
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    slider.addEventListener('input', (e) => {
+        lightInput = parseInt(e.target.value) / 100;
+    });
+
+    // --- Logic ---
+    function update() {
+        const cx = W/2 + 40; // Shifted slightly right to make room for UI
+        const cy = H/2;
+
+        currentFlow += (lightInput - currentFlow) * 0.1;
+
+        // UI Updates
+        const simAmps = currentFlow * 0.05; 
+        const simWatts = voltage * simAmps;
+        powerBar.style.width = (currentFlow * 100) + "%";
+        powerText.innerText = simWatts.toFixed(3) + " W";
+
+        // Spawn Photons
+        if(lightInput > 0) {
+            let count = Math.ceil(lightInput * 2);
+            for(let i=0; i<count; i++) photons.push(createPhoton(cx, cy));
+        }
+
+        // Move Photons
+        for(let i = photons.length - 1; i >= 0; i--) {
+            let p = photons[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            // Base Collision
+            if(p.x > cx - transW/2 && p.x < cx + transW/2 && 
+               p.y > cy - transH/6 && p.y < cy + transH/6) {
+                photons.splice(i, 1);
+            } else if(p.x < 0 || p.y < 0 || p.x > W || p.y > H) {
+                photons.splice(i, 1);
+            }
+        }
+
+        // Move Electrons
+        const speed = currentFlow * 0.02;
+        electrons.forEach(e => {
+            if(currentFlow > 0.01) {
+                e.offset += speed;
+                if(e.offset > 1) e.offset -= 1;
+            }
+        });
+    }
+
+    function createPhoton(cx, cy) {
+        // Light Source position relative to center
+        const sx = cx - 220; 
+        const sy = cy - 120;
+        
+        const tx = cx + (Math.random()*30 - 15);
+        const ty = cy;
+        const angle = Math.atan2(ty-sy, tx-sx);
+        const s = 8 + Math.random()*4;
+        return { x: sx, y: sy, vx: Math.cos(angle)*s, vy: Math.sin(angle)*s };
+    }
+
+    function getPos(progress, cx, cy) {
+        // Path points
+        const rightX = cx + loopRadW;
+        const leftX = cx;
+        const topY = cy - loopRadH;
+        const botY = cy + loopRadH;
+        const tTop = cy - transH/2;
+        const tBot = cy + transH/2;
+
+        const path = [
+            {x: leftX, y: tBot}, {x: leftX, y: botY},
+            {x: rightX, y: botY}, {x: rightX, y: topY},
+            {x: leftX, y: topY}, {x: leftX, y: tTop},
+            {x: leftX, y: tBot}
+        ];
+
+        // Lengths
+        let total = 0;
+        let lens = [];
+        for(let i=0; i<path.length-1; i++) {
+            let dx = path[i+1].x - path[i].x;
+            let dy = path[i+1].y - path[i].y;
+            let d = Math.sqrt(dx*dx+dy*dy);
+            lens.push(d);
+            total += d;
+        }
+
+        let dCur = progress * total;
+        let idx = 0;
+        while(dCur > lens[idx] && idx < lens.length-1) {
+            dCur -= lens[idx];
+            idx++;
+        }
+        
+        let p1 = path[idx];
+        let p2 = path[idx+1];
+        let pct = dCur / lens[idx];
+        return {
+            x: p1.x + (p2.x - p1.x)*pct,
+            y: p1.y + (p2.y - p1.y)*pct,
+            segment: idx
+        };
+    }
+
+    function draw() {
+        ctx.fillStyle = '#121212';
+        ctx.fillRect(0,0,W,H);
+
+        const cx = W/2 + 40; 
+        const cy = H/2;
+        
+        // Coordinates for drawing
+        const rightX = cx + loopRadW;
+        const topY = cy - loopRadH;
+        const botY = cy + loopRadH;
+        const tTop = cy - transH/2;
+        const tBot = cy + transH/2;
+
+        // --- 1. Wires ---
+        ctx.lineWidth = 6; // Thinner wires
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        // High Voltage (Red - Constant)
+        ctx.beginPath();
+        ctx.strokeStyle = '#ff4444'; 
+        ctx.shadowColor = '#ff0000';
+        ctx.shadowBlur = 10;
+        ctx.moveTo(rightX, cy + 30); 
+        ctx.lineTo(rightX, topY);
+        ctx.lineTo(cx, topY);
+        ctx.lineTo(cx, tTop + 4); 
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // Ground (Blue)
+        ctx.beginPath();
+        ctx.strokeStyle = '#3388ff';
+        ctx.moveTo(cx, tBot - 4);
+        ctx.lineTo(cx, botY);
+        ctx.lineTo(rightX, botY);
+        ctx.lineTo(rightX, cy + 80);
+        ctx.stroke();
+
+        // --- 2. Battery ---
+        const battY = cy + 55;
+        ctx.fillStyle = '#121212';
+        ctx.fillRect(rightX - 15, battY - 25, 30, 50); 
+
+        // Housing
+        ctx.strokeStyle = '#888';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(rightX - 12, battY - 20, 24, 40);
+        ctx.fillStyle = '#888';
+        ctx.fillRect(rightX - 6, battY - 24, 12, 4);
+
+        // Constant Power Fill
+        ctx.fillStyle = 'rgba(255, 68, 68, 0.8)';
+        ctx.fillRect(rightX - 10, battY - 18, 20, 36);
+        
+        // Pulse
+        const pulse = (Math.sin(Date.now() / 200) + 1) / 2;
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.1 + pulse * 0.2})`;
+        ctx.fillRect(rightX - 10, battY - 18, 20, 36);
+
+        ctx.fillStyle = '#fff';
+        ctx.font = '9px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText("9V", rightX, battY + 5);
+
+
+        // --- 3. Load (LED) ---
+        const loadY = cy - loopRadH;
+        const brightness = currentFlow;
+        ctx.fillStyle = `rgb(255, ${50 + brightness*205}, ${50})`;
+        ctx.shadowColor = 'red';
+        ctx.shadowBlur = brightness * 40;
+        ctx.beginPath();
+        ctx.arc(rightX, loadY, 12, 0, Math.PI*2); // Smaller LED
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        
+        ctx.fillStyle = '#ccc';
+        ctx.fillText("Load", rightX + 25, loadY + 3);
+
+        // --- 4. Transistor ---
+        const tx = cx - transW/2;
+        const lh = transH/3;
+
+        // Collector
+        ctx.fillStyle = '#2c3e50';
+        ctx.fillRect(tx, tTop, transW, lh);
+        // Base
+        const baseAct = Math.min(255, 60 + currentFlow*190);
+        ctx.fillStyle = `rgb(${baseAct}, 40, 40)`;
+        ctx.fillRect(tx, tTop+lh, transW, lh);
+        // Emitter
+        ctx.fillStyle = '#2c3e50';
+        ctx.fillRect(tx, tTop+2*lh, transW, lh);
+        
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(tx, tTop, transW, transH);
+
+        // Labels
+        ctx.textAlign = 'left';
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        ctx.font = '10px Arial';
+        ctx.fillText("C", tx+5, tTop+15);
+        ctx.fillText("B", tx+5, tTop+lh+15);
+        ctx.fillText("E", tx+5, tTop+2*lh+15);
+
+        // --- 5. Particles ---
+        
+        // Photons
+        ctx.fillStyle = '#ffd700';
+        photons.forEach(p => {
+            ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, Math.PI*2); ctx.fill();
+        });
+
+        // Electrons
+        ctx.fillStyle = '#00f260';
+        electrons.forEach(e => {
+            let pos = getPos(e.offset, cx, cy);
+            
+            if(Math.abs(pos.x - rightX) < 15 && Math.abs(pos.y - battY) < 25) return; 
+            if(Math.abs(pos.x - rightX) < 15 && Math.abs(pos.y - loadY) < 15) return; 
+
+            // Jitter if static
+            let jitterX = 0, jitterY = 0;
+            if (currentFlow < 0.05) {
+                if (pos.segment === 5) return; 
+                jitterX = (Math.random() - 0.5) * 2;
+                jitterY = (Math.random() - 0.5) * 2;
+            }
+
+            ctx.beginPath();
+            ctx.arc(pos.x + jitterX, pos.y + jitterY, 3, 0, Math.PI*2);
+            ctx.fill();
+        });
+
+        // Light Source
+        const lx = cx - 220;
+        const ly = cy - 120;
+        ctx.fillStyle = `rgba(255, 215, 0, ${0.1 + lightInput})`;
+        ctx.shadowColor = 'orange';
+        ctx.shadowBlur = lightInput * 50;
+        ctx.beginPath();
+        ctx.arc(lx, ly, 15, 0, Math.PI*2); // Smaller bulb
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        
+        requestAnimationFrame(update);
+        requestAnimationFrame(draw);
+    }
+    
+    update();
+    draw();
+
+</script>
+</body>
+</html>

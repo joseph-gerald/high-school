@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Screen Circuit Flow</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevent scrollbars */
+            background-color: #1e1e24;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="circuitCanvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('circuitCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // === RESIZE HANDLER ===
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize(); // Initial call
+
+    // === CIRCUIT LOGIC ===
+    let time = 0;
+    
+    // Logical dimensions of the drawing (to keep proportions)
+    const LOGICAL_WIDTH = 900;
+    const LOGICAL_HEIGHT = 500;
+
+    // Component Positions (Relative to logical center)
+    // We will calculate these dynamically in the draw loop
+    
+    // === ELECTRONS CLASS ===
+    class Electron {
+        constructor(pathId, offset, speedBase) {
+            this.pathId = pathId; 
+            this.progress = offset; 
+            this.speedBase = speedBase;
+        }
+
+        update(heartCycle) {
+            let currentSpeed = this.speedBase;
+            // Slow down sensor electrons when resistance is high (beat)
+            if (this.pathId === "sensor") {
+                currentSpeed = this.speedBase * (1.5 - heartCycle); 
+            }
+            this.progress += currentSpeed;
+            if (this.progress >= 1) this.progress = 0;
+        }
+
+        draw(points) {
+            const totalSegments = points.length - 1;
+            const segmentLength = 1 / totalSegments;
+            const currentSegment = Math.floor(this.progress / segmentLength);
+            const segmentProgress = (this.progress % segmentLength) / segmentLength;
+
+            if (currentSegment >= totalSegments) return;
+
+            const p1 = points[currentSegment];
+            const p2 = points[currentSegment + 1];
+
+            const x = p1.x + (p2.x - p1.x) * segmentProgress;
+            const y = p1.y + (p2.y - p1.y) * segmentProgress;
+
+            ctx.beginPath();
+            ctx.fillStyle = "#ffea00";
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#ffea00";
+            ctx.arc(x, y, 4, 0, Math.PI*2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+    }
+
+    // Initialize Electrons
+    const electrons = [];
+    for(let i=0; i<6; i++) electrons.push(new Electron("led", i/6, 0.01));
+    for(let i=0; i<6; i++) electrons.push(new Electron("sensor", i/6, 0.01));
+    for(let i=0; i<5; i++) electrons.push(new Electron("signal", i/5, 0.008));
+
+
+    // === DRAWING FUNCTIONS ===
+    function drawLine(x1, y1, x2, y2, color, width) {
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+    }
+
+    function drawResistor(x, y, vertical) {
+        ctx.beginPath();
+        ctx.strokeStyle = "#d4af37";
+        ctx.lineWidth = 4;
+        if(vertical) {
+            ctx.moveTo(x, y-15); ctx.lineTo(x-6, y-10); ctx.lineTo(x+6, y); 
+            ctx.lineTo(x-6, y+10); ctx.lineTo(x, y+15);
+        } else {
+            ctx.moveTo(x-15, y); ctx.lineTo(x-10, y-6); ctx.lineTo(x, y+6); 
+            ctx.lineTo(x+10, y-6); ctx.lineTo(x+15, y);
+        }
+        ctx.stroke();
+    }
+
+    function drawOpAmp(x, y) {
+        ctx.fillStyle = "#333";
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(x, y-40);
+        ctx.lineTo(x, y+40);
+        ctx.lineTo(x+60, y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        ctx.fillStyle = "white";
+        ctx.font = "14px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("LM358", x+25, y+5);
+    }
+
+    function drawLegend(x, y) {
+        const boxW = 220, boxH = 100;
+        ctx.fillStyle = "rgba(0,0,0,0.6)";
+        ctx.strokeStyle = "#555";
+        ctx.lineWidth = 1;
+        ctx.fillRect(x, y, boxW, boxH);
+        ctx.strokeRect(x, y, boxW, boxH);
+
+        ctx.font = "14px Arial";
+        ctx.textAlign = "left";
+        
+        // 5V
+        ctx.fillStyle = "#f72585"; ctx.beginPath(); ctx.arc(x+20, y+25, 5, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = "#ccc"; ctx.fillText("5V Power Rail", x+40, y+30);
+
+        // Signal
+        ctx.fillStyle = "#4cc9f0"; ctx.beginPath(); ctx.arc(x+20, y+50, 5, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = "#ccc"; ctx.fillText("Signal Path", x+40, y+55);
+
+        // Electron
+        ctx.fillStyle = "#ffea00"; ctx.beginPath(); ctx.arc(x+20, y+75, 5, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = "#ccc"; ctx.fillText("Current (Flow varies w/ Pulse)", x+40, y+80);
+    }
+
+
+    // === MAIN ANIMATION LOOP ===
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Center the diagram on screen
+        const startX = (canvas.width - LOGICAL_WIDTH) / 2;
+        const startY = (canvas.height - LOGICAL_HEIGHT) / 2;
+        
+        // Positions
+        const Y_5V = startY + 50;
+        const Y_GND = startY + 450;
+        const Y_MID = startY + 250;
+
+        const X_LED = startX + 100;
+        const X_FINGER = startX + 225;
+        const X_SENSOR = startX + 350;
+        const X_CAP = startX + 500;
+        const X_OPAMP = startX + 650;
+        const X_ARDUINO = startX + 850;
+
+        // Paths for Electrons (Re-calculated every frame in case of resize)
+        const pathLED = [{x:X_LED, y:Y_5V}, {x:X_LED, y:Y_GND}];
+        const pathSensor = [{x:X_SENSOR, y:Y_5V}, {x:X_SENSOR, y:Y_GND}];
+        const pathSignal = [
+            {x:X_SENSOR, y:Y_MID}, {x:X_CAP, y:Y_MID}, 
+            {x:X_OPAMP, y:Y_MID}, {x:X_ARDUINO, y:Y_MID}
+        ];
+
+        // 1. Math for Pulse
+        const pulse = (Math.sin(time) + 1) / 2; // 0.0 to 1.0
+        const isSystole = pulse > 0.8;
+
+        // === DRAW RAILS ===
+        drawLine(startX, Y_5V, startX + 900, Y_5V, "#f72585", 8); // 5V
+        drawLine(startX, Y_GND, startX + 900, Y_GND, "#666", 8); // GND
+
+        ctx.font = "bold 16px Arial";
+        ctx.fillStyle = "#f72585"; ctx.fillText("+5V", startX - 30, Y_5V+5);
+        ctx.fillStyle = "#666"; ctx.fillText("GND", startX - 30, Y_GND+5);
+
+        // === LED SECTION ===
+        drawLine(X_LED, Y_5V, X_LED, Y_GND, "#555", 4);
+        drawResistor(X_LED, Y_MID - 100, true);
+        
+        // LED Body
+        ctx.beginPath(); ctx.fillStyle = "red";
+        ctx.arc(X_LED, Y_MID, 12, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = "white"; ctx.textAlign = "center"; 
+        ctx.fillText("LED", X_LED, Y_MID - 25);
+
+        // Light Beam
+        ctx.beginPath();
+        ctx.moveTo(X_LED, Y_MID);
+        ctx.lineTo(X_SENSOR, Y_MID - 25);
+        ctx.lineTo(X_SENSOR, Y_MID + 25);
+        ctx.fillStyle = `rgba(255, 50, 50, ${0.15 + (pulse * 0.1)})`;
+        ctx.fill();
+
+        // === FINGER ===
+        ctx.beginPath();
+        ctx.fillStyle = isSystole ? "#c0392b" : "#e0ac69"; // Red vs Skin
+        ctx.ellipse(X_FINGER, Y_MID, 25, 40, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = "white"; ctx.fillText("FINGER", X_FINGER, Y_MID - 50);
+
+        // === SENSOR SECTION ===
+        drawLine(X_SENSOR, Y_5V, X_SENSOR, Y_GND, "#555", 4);
+        
+        // Phototransistor
+        ctx.beginPath(); ctx.fillStyle = "#111"; ctx.strokeStyle = "#4cc9f0";
+        ctx.arc(X_SENSOR, Y_MID, 14, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "white"; ctx.fillText("Sensor", X_SENSOR, Y_MID - 25);
+
+        // === FILTER & OP-AMP ===
+        // Wire Sensor -> OpAmp
+        drawLine(X_SENSOR, Y_MID, X_OPAMP, Y_MID, "#4cc9f0", 3);
+
+        // Capacitor
+        ctx.fillStyle = "#e67e22";
+        ctx.fillRect(X_CAP-6, Y_MID-20, 5, 40);
+        ctx.fillRect(X_CAP+6, Y_MID-20, 5, 40);
+        ctx.fillStyle = "white"; ctx.fillText("Cap", X_CAP, Y_MID - 35);
+
+        // Op-Amp
+        drawOpAmp(X_OPAMP, Y_MID);
+
+        // Output Wire
+        drawLine(X_OPAMP+60, Y_MID, X_ARDUINO, Y_MID, "#4cc9f0", 4);
+
+        // === ARDUINO ===
+        ctx.fillStyle = "#00979d";
+        ctx.fillRect(X_ARDUINO-30, Y_MID-40, 80, 80);
+        ctx.fillStyle = "white"; ctx.font = "bold 16px Arial";
+        ctx.fillText("ARDUINO", X_ARDUINO+10, Y_MID - 10);
+        ctx.font = "14px Arial"; ctx.fillText("Pin A0", X_ARDUINO+10, Y_MID + 15);
+
+        // === ELECTRONS ===
+        electrons.forEach(e => {
+            e.update(pulse);
+            if(e.pathId === "led") e.draw(pathLED);
+            else if(e.pathId === "sensor") e.draw(pathSensor);
+            else if(e.pathId === "signal") e.draw(pathSignal);
+        });
+
+        // === LEGEND (Inside Canvas) ===
+        drawLegend(startX, Y_GND - 100);
+
+        time += 0.05;
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+</script>
+</body>
+</html>
