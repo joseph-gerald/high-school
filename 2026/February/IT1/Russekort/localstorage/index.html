@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form class="container" onsubmit="event.preventDefault()">
+        <h1>
+            Russekort Generator
+        </h1>
+
+        <label for="group">Russe Gruppe</label>
+        <input type="text" required placeholder="AKADEMIETRUSSEN 2026" id="group">
+        <label for="name">Navn</label>
+        <input type="text" required placeholder="Navn" id="name">
+        <label for="address">Addresse</label>
+        <input type="text" required placeholder="et sted" id="address">
+        <label for="tlf">Telefon Nr</label>
+        <input type="text" required placeholder="Vippser du?" id="tlf">
+        <label for="quote">Sitat</label>
+        <textarea type="text" required
+            placeholder="Appear weak when you are strong, and strong when you are weak. - Sun Tzu"
+            id="quote"></textarea>
+
+        <label for="picture">Bilde</label>
+        <input type="file" required id="picture">
+        <button id="submit">Lag russekortet mitt</button>
+    </form>
+</body>
+<style>
+    body {
+        margin: 0;
+        min-height: 100dvh;
+
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        max-width: 400px;
+        margin: auto;
+    }
+
+    #submit,
+    label {
+        margin-top: 8px;
+    }
+</style>
+<script>
+    const ELMS = {
+        INPUTS: {
+            picture: document.getElementById("picture"),
+            name: document.getElementById("name"),
+            group: document.getElementById("group"),
+            address: document.getElementById("address"),
+            tlf: document.getElementById("tlf"),
+            quote: document.getElementById("quote"),
+        },
+        submit: document.getElementById("submit")
+    }
+
+    ELMS.INPUTS.picture.onchange = e => {
+        console.log(e)
+    }
+
+    ELMS.submit.onclick = async () => {
+        1
+        if (ELMS.INPUTS.picture.files.length == 0) return;
+
+        const reader = new FileReader();
+        const cardId = Math.floor(Math.random() * 1000).toString().padStart(4, "0");
+        const dataObj = {};
+
+
+        for (const [name, inputElm] of Object.entries(ELMS.INPUTS)) {
+            if (name == "picture") continue
+
+            const value = inputElm.value;
+
+            if (value == "") return;
+
+            dataObj[name] = value;
+
+        }
+
+        reader.readAsDataURL(ELMS.INPUTS.picture.files[0]);
+
+        reader.onload = async () => {
+            dataObj.picture = reader.result;
+
+            pushCard(cardId, dataObj);
+
+            window.location.href = `card.html?id=${cardId}`;
+        }
+    }
+</script>
+<script>
+    function pushCard(id, data) {
+        localStorage.setItem(id, JSON.stringify(data));
+    }
+</script>
+
+</html>
