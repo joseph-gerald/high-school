@@ -14,31 +14,80 @@
         </h1>
 
         <label for="group">Russe Gruppe</label>
-        <input type="text" required placeholder="AKADEMIETRUSSEN 2026" id="group">
+        <div class="input-group">
+            <input type="text" required placeholder="AKADEMIETRUSSEN 2026" id="group">
+        </div>
         <label for="name">Navn</label>
-        <input type="text" required placeholder="Navn" id="name">
+        <div class="input-group">
+            <input type="text" required placeholder="Navn" id="name">
+        </div>
         <label for="address">Addresse</label>
-        <input type="text" required placeholder="et sted" id="address">
+        <div class="input-group">
+            <input type="text" required placeholder="et sted" id="address">
+        </div>
         <label for="tlf">Telefon Nr</label>
-        <input type="text" required placeholder="Vippser du?" id="tlf">
+        <div class="input-group">
+            <input type="text" required placeholder="Vippser du?" id="tlf">
+        </div>
         <label for="quote">Sitat</label>
         <textarea type="text" required
             placeholder="Appear weak when you are strong, and strong when you are weak. - Sun Tzu"
             id="quote"></textarea>
 
-        <label for="color">Farge</label>
+        <label for="color">Text Farge</label>
         <input type="color" required placeholder="Vippser du?" id="color">
-        
-        <label for="color">son</label>
-        <input type="range" required placeholder="Vippser du?" id="darkness">
-        
+
+        <label for="color">Bilde Rundhet</label>
+        <input type="range" required placeholder="Vippser du?" id="border-radius" min="0" max="50">
+
+        <label for="bg-farge">Backgrunds Farge</label>
+        <select id="bg-farge">
+            <option value="rød">rød</option>
+            <option value="svart">svart</option>
+        </select>
+
+        <label>Kort Type</label>
+
+        <div class="input-group">
+            <input type="radio" name="type" id="russ-radio" value="russ">
+            <label for="russ-radio">russ</label>
+        </div>
+
+        <div class="input-group">
+            <input type="radio" name="type" id="proff-radio" value="proff">
+            <label for="proff-radio">proff</label>
+        </div>
 
         <label for="picture">Bilde</label>
         <input type="file" required id="picture">
         <button id="submit">Lag russekortet mitt</button>
+        <button id="save-draft">Lagre Draft</button>
     </form>
+
+    <div class="card-preview-container">
+        <div id="card-preview">
+            <p id="group"></p>
+            <div>
+                <img src="https://thispersondoesnotexist.com/" alt="" id="picture">
+                <div>
+                    <div>
+                        <img src="assets/rødruss.png" alt="" id="russe-type">
+                        <p id="name"></p>
+                        <p id="address">Adr. </p>
+                        <p id="tlf">Tlf. </p>
+                    </div>
+                    <p id="quote"></p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <style>
+    * {
+        margin: 0;
+        box-sizing: border-box;
+    }
+
     body {
         margin: 0;
         min-height: 100dvh;
@@ -48,6 +97,15 @@
         justify-content: center;
         align-items: center;
     }
+    
+    .card-preview-container {
+        width: 50%;
+        max-width: 50%;
+        display: flex;
+        gap: 16px;
+        overflow: auto;
+
+    }
 
     .container {
         display: flex;
@@ -55,15 +113,88 @@
         gap: 4px;
         max-width: 400px;
         margin: auto;
+        width: 100%;
     }
 
-    #submit,
-    label {
+    .input-group~label,
+    #submit {
         margin-top: 8px;
+    }
+
+    #submit {
+        display: none;
+    }
+
+    .input-group {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+
+
+
+    #card-preview #group {
+        font-size: 32px;
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    #card-preview {
+        padding: 12px;
+        background: radial-gradient(white, #cf3738, #cf3738);
+        width: 600px;
+        height: 340px;
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    #card-preview>div {
+        display: flex;
+        text-align: right;
+        height: 100%;
+
+        align-items: center;
+    }
+
+    #card-preview>div>div {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        justify-content: space-between;
+    }
+
+    #card-preview #picture {
+        max-width: 180px;
+        max-height: 180px;
+
+        rotate: -15deg;
+        margin: 20px;
+
+        box-shadow: 16px 16px;
+        border: 8px solid black;
+    }
+
+    #card-preview #russe-type {
+        width: 340px;
+    }
+
+    #card-preview #name {
+        font-size: 28px;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+
+    #card-preview #quote {
+        margin-top: 10px;
     }
 </style>
 <script>
-
     const ELMS = {
         INPUTS: {
             picture: document.getElementById("picture"),
@@ -73,12 +204,58 @@
             tlf: document.getElementById("tlf"),
             quote: document.getElementById("quote"),
             color: document.getElementById("color"),
+            borderRadius: document.getElementById("border-radius"),
+            bgFarge: document.getElementById("bg-farge"),
+            types: document.querySelectorAll("input[name='type']")
         },
-        submit: document.getElementById("submit")
+        submit: document.getElementById("submit"),
+        save_draft: document.getElementById("save-draft"),
+        card_preview: document.getElementById("card-preview"),
+        card_preview_container: document.querySelector(".card-preview-container")
+    }
+
+    ELMS.save_draft.onclick = () => {
+        const clone = ELMS.card_preview.cloneNode(true);
+
+        if (ELMS.card_preview_container.children.length == 1) {
+            ELMS.card_preview_container.appendChild(clone);
+            return;
+        }
+
+        ELMS.card_preview_container.insertBefore(clone, ELMS.card_preview_container.children[1]);
     }
 
     ELMS.INPUTS.picture.onchange = e => {
         console.log(e)
+    }
+
+    function getCardData() {
+        const dataObj = {};
+
+        for (const [name, inputElm] of Object.entries(ELMS.INPUTS)) {
+            if (name == "picture") {
+                if (inputElm.files.length == 0) continue;
+
+                dataObj.picture = inputElm.files[0];
+                continue;
+            }
+            if (name == "types") {
+                for (const type of inputElm) {
+                    if (type.checked) {
+                        dataObj.type = type.value;
+                    }
+                }
+                continue;
+            }
+
+            const value = inputElm.value;
+
+            if (value == "") continue;
+
+            dataObj[name] = value;
+        }
+
+        return dataObj;
     }
 
     ELMS.submit.onclick = async () => {
@@ -90,22 +267,86 @@
             picture: res.id
         };
 
+        
+        console.log(dataObj)
 
-        for (const [name, inputElm] of Object.entries(ELMS.INPUTS)) {
-            if (name == "picture") continue
+        // await pushCard(cardId, dataObj);
 
-            const value = inputElm.value;
+        // window.location.href = `card.html?id=${cardId}`;
+    }
 
-            if (value == "") return;
+    for (const inputGroup of document.querySelectorAll(".input-group")) {
 
-            dataObj[name] = value;
+        const inputElm = inputGroup.querySelector("input");
+        if (inputElm.id.includes("radio")) continue
+
+        const toggleCheck = document.createElement("input");
+        toggleCheck.type = "checkbox";
+        toggleCheck.checked = true;
+
+        inputElm.parentElement.insertBefore(toggleCheck, inputElm);
+
+        toggleCheck.oninput = () => {
+            inputElm.disabled = !toggleCheck.checked;
+        }
+    }
+
+    function displayCard(data) {
+        console.log("dipslay card", data)
+        for (let [name, value] of Object.entries(data)) {
+            const elm = document.querySelector(`#card-preview #${name}`);
+
+            console.log(name, value, elm)
+
+            if (name == "picture") {
+                const reader = new FileReader();
+                reader.readAsDataURL(value);
+                reader.onload = function (e) {
+                    elm.src = e.target.result;
+                }
+                continue;
+            }
+
+            if (name == "type") {
+                document.querySelector("#russe-type").style.opacity = value == "russ" ? "1" : "0";
+                continue;
+            }
+
+            if (name == "color") {
+                document.querySelector("#card-preview").style.color = value;
+                continue;
+            }
+
+            if (name == "borderRadius") {
+                document.querySelector("#card-preview #picture").style.borderRadius = value + "%";
+                continue;
+            }
+
+            if (name == "bgFarge") {
+                value = {
+                    "svart": "#000000",
+                    "rød": "#cf3738"
+                }[value];
+
+                document.querySelector("#card-preview").style.background = `radial-gradient(white, ${value}, ${value})`;
+                continue;
+            }
+
+            if (name == "address") {
+                value = "Adr. " + value;
+            }
+
+            if (name == "tlf") {
+                value = "Tlf. " + value;
+            }
+
+            elm.innerText = value;
 
         }
-        console.log(dataObj)
-        
-        await pushCard(cardId, dataObj);
+    }
 
-        window.location.href = `card.html?id=${cardId}`;
+    document.querySelector("form").oninput = () => {
+        displayCard(getCardData());
     }
 </script>
 <script>
