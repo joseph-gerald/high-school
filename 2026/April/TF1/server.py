@@ -116,18 +116,16 @@ async def handler(websocket):
 
 # ─── Main broadcast loop ───────────────────────────────────────────────────────
 async def broadcast_loop():
-    """Send sensor data to clients at 60fps."""
-    last_ts = None
+    """Send sensor data to clients at 60fps (always, even if data hasn't changed)."""
     while True:
         with lock:
             row = latest.copy()
         
-        # Only broadcast if data changed
-        if row.get("ts") != last_ts:
-            await broadcast({"type": "sensor", "data": row})
-            last_ts = row.get("ts")
+        # Broadcast every frame, not just when data changes
+        # This ensures smooth interpolation on the client
+        await broadcast({"type": "sensor", "data": row})
         
-        await asyncio.sleep(1/60)  # 60 fps target
+        await asyncio.sleep(1/60)  # 60 fps target = ~16.67ms
 
 # ─── Server startup ───────────────────────────────────────────────────────────
 async def main():
