@@ -175,13 +175,15 @@
             temp: 25.0
         };
 
-        // Velocity estimation for predictive extrapolation
-        let velocityState = {
+        // Smoothed velocity (low-pass filtered to prevent jitter)
+        let smoothedVelocity = {
             ax: 0, ay: 0, az: 0,
             gx: 0, gy: 0, gz: 0,
             roll: 0, pitch: 0,
             temp: 0
         };
+
+        const VELOCITY_DAMPING = 0.4;  // 0-1: higher = smoother but slower to respond
 
         // Reading history
         let prevReading = { ...displayState, ts: Date.now() };
@@ -205,12 +207,14 @@
                 if (msg.type === 'sensor') {
                     const newReading = { ...msg.data, ts: Date.now() };
                     
-                    // Calculate velocity (change per millisecond)
-                    const dt = Math.max(1, newReading.ts - currReading.ts) / 1000;
+                    // Calculate instantaneous velocity
+                    const dt = Math.max(0.001, (newReading.ts - currReading.ts) / 1000);
                     const keys = ['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'roll', 'pitch', 'temp'];
                     
                     for (const key of keys) {
-                        velocityState[key] = (newReading[key] - currReading[key]) / dt;
+                        const instantVelocity = (newReading[key] - currReading[key]) / dt;
+                        // Low-pass filter velocity to prevent jittery extrapolation
+                        smoothedVelocity[key] = smoothedVelocity[key] + VELOCITY_DAMPING * (instantVelocity - smoothedVelocity[key]);
                     }
                     
                     // Shift: curr → prev, new → curr
@@ -235,19 +239,18 @@
 
         connectWS();
 
-        // ─── Predictive extrapolation ──────────────────────────────────────────
+        // ─── Smooth extrapolation ──────────────────────────────────────────────
         function getDisplayState() {
             const now = Date.now();
-            const timeSinceUpdate = now - currReading.ts;
+            const timeSinceUpdate = (now - currReading.ts) / 1000;
             
-            // Extrapolate forward using estimated velocity
-            // This predicts where the sensor would be now if motion continues
+            // Extrapolate using smoothed velocity
             const result = {};
             const keys = ['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'roll', 'pitch', 'temp'];
             
             for (const key of keys) {
-                // Extrapolate: current_value + velocity * time_elapsed
-                result[key] = currReading[key] + velocityState[key] * (timeSinceUpdate / 1000);
+                // Use dampened velocity to prevent overshoot
+                result[key] = currReading[key] + smoothedVelocity[key] * timeSinceUpdate;
             }
             
             return result;
