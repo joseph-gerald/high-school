@@ -175,38 +175,10 @@
             temp: 25.0
         };
 
-        // Simple two-point interpolation
-        let prev = {
-            ax: 0, ay: 0, az: 1,
-            gx: 0, gy: 0, gz: 0,
-            roll: 0, pitch: 0,
-            temp: 25.0,
-            ts: Date.now()
-        };
-
-        let curr = {
-            ax: 0, ay: 0, az: 1,
-            gx: 0, gy: 0, gz: 0,
-            roll: 0, pitch: 0,
-            temp: 25.0,
-            ts: Date.now()
-        };
-
-        // ─── Logging ───────────────────────────────────────────────────────────
-        let frameCount = 0;
-        let lastLogTime = Date.now();
-        const LOG_INTERVAL = 1000; // Log every 1 second
-
-        function log(msg) {
-            const now = Date.now();
-            console.log(`[${now}] ${msg}`);
-        }
-
         // ─── WebSocket connection ──────────────────────────────────────────────
         let ws;
         const statusEl = document.getElementById('status');
         let messageCount = 0;
-        let lastMessageTime = Date.now();
 
         function connectWS() {
             ws = new WebSocket('ws://localhost:8765');
@@ -222,19 +194,14 @@
                 const msgTime = Date.now();
                 
                 if (msg.type === 'sensor') {
-                    const timeSinceLastMsg = msgTime - lastMessageTime;
-                    const rollDelta = Math.abs(msg.data.roll - curr.roll);
-                    
-                    // Shift: curr → prev, new → curr
-                    prev = { ...curr };
-                    curr = { ...msg.data, ts: msgTime };
+                    // Just set latest data directly - zero latency, zero interpolation
+                    displayState = { ...msg.data };
                     
                     messageCount++;
-                    lastMessageTime = msgTime;
                     
-                    // Log every message with roll delta
-                    if (messageCount % 3 === 0) {
-                        log(`[sensor] msg #${messageCount} | interval: ${timeSinceLastMsg}ms | roll: ${curr.roll.toFixed(1)}° (delta: ${rollDelta.toFixed(1)}°) | prev: ${prev.roll.toFixed(1)}°`);
+                    // Log every 10 messages
+                    if (messageCount % 10 === 0) {
+                        log(`[sensor] msg #${messageCount} | roll: ${displayState.roll.toFixed(1)}°`);
                     }
                 }
             };
@@ -255,43 +222,9 @@
 
         connectWS();
 
-        // ─── Easing function (ease-out cubic) ──────────────────────────────────
-        // Makes interpolation smooth and natural-feeling
-        function easeOutCubic(t) {
-            return 1 - Math.pow(1 - t, 3);
-        }
-
-        // ─── Smooth interpolation with easing ──────────────────────────────────
-        // Linearly move through time, but use eased t for values
+        // ─── Get display state (just return latest) ────────────────────────────
         function getDisplayState() {
-            const now = Date.now();
-            const span = curr.ts - prev.ts;
-            
-            // If readings are too close or no time has passed, use curr
-            if (span < 5) {
-                return { ...curr };
-            }
-            
-            // Linear time progress (0 = at prev, 1 = at curr, >1 = extrapolating ahead)
-            const elapsed = now - prev.ts;
-            let t_linear = elapsed / span;  // Don't clamp! Allow extrapolation
-            
-            // Apply easing function - but cap at 1.5 to prevent wild extrapolation
-            let t_eased = Math.min(1.5, easeOutCubic(Math.min(1.0, t_linear)));
-            
-            const result = {};
-            const keys = ['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'roll', 'pitch', 'temp'];
-            
-            for (const key of keys) {
-                result[key] = prev[key] + (curr[key] - prev[key]) * t_eased;
-            }
-            
-            // Detailed interpolation logging (every 60 frames)
-            if (frameCountLocal % 60 === 0) {
-                log(`[interp] span: ${span}ms | elapsed: ${elapsed}ms | t_linear: ${t_linear.toFixed(3)} | t_eased: ${t_eased.toFixed(3)} | prev.roll: ${prev.roll.toFixed(1)}° | curr.roll: ${curr.roll.toFixed(1)}° | result.roll: ${result.roll.toFixed(1)}°`);
-            }
-            
-            return result;
+            return displayState;
         }
 
         // ─── UI update ─────────────────────────────────────────────────────────
@@ -310,43 +243,32 @@
         // ─── Animation loop ────────────────────────────────────────────────────
         let frameCountLocal = 0;
         let lastFPSTime = Date.now();
-        let lastFrameTime = Date.now();
 
         function animate() {
             requestAnimationFrame(animate);
-            
-            const frameTime = Date.now();
-            const deltaTime = frameTime - lastFrameTime;
-            lastFrameTime = frameTime;
 
-            // Get interpolated state
-            displayState = getDisplayState();
+            // Get latest state
+            const state = getDisplayState();
 
             // Update board rotation (pitch = Y, roll = X)
             boardGroup.rotation.order = 'YXZ';
-            boardGroup.rotation.y = THREE.MathUtils.degToRad(displayState.pitch);
-            boardGroup.rotation.x = THREE.MathUtils.degToRad(displayState.roll);
+            boardGroup.rotation.y = THREE.MathUtils.degToRad(state.pitch);
+            boardGroup.rotation.x = THREE.MathUtils.degToRad(state.roll);
 
             // Update acceleration arrow
-            updateArrow(displayState.ax, displayState.ay, displayState.az);
+            updateArrow(state.ax, state.ay, state.az);
 
             // Update UI
-            updateUI(displayState);
+            updateUI(state);
 
-            // FPS counter + frame timing
+            // FPS counter
             frameCountLocal++;
             const now = Date.now();
             if (now - lastFPSTime >= 1000) {
                 const fps = frameCountLocal;
                 document.getElementById('fps').textContent = fps + ' fps';
-                log(`[frame] ${fps} fps | avg delta: ${(1000/fps).toFixed(1)}ms`);
                 frameCountLocal = 0;
                 lastFPSTime = now;
-            }
-            
-            // Log occasionally for frame-level detail
-            if (frameCountLocal % 30 === 0) {
-                log(`[render] roll: ${displayState.roll.toFixed(1)}° | pitch: ${displayState.pitch.toFixed(1)}° | delta: ${deltaTime}ms`);
             }
 
             renderer.render(scene, camera);
