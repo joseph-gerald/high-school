@@ -175,20 +175,22 @@
             temp: 25.0
         };
 
-        // Ring buffer of readings - we interpolate within this, never jumping
-        // This is how game engines and mocap systems solve this problem
-        const BUFFER_SIZE = 6;  // Keep last ~150ms of data (6 * 25ms)
-        let readingBuffer = [];
-        
-        for (let i = 0; i < BUFFER_SIZE; i++) {
-            readingBuffer.push({
-                ax: 0, ay: 0, az: 1,
-                gx: 0, gy: 0, gz: 0,
-                roll: 0, pitch: 0,
-                temp: 25.0,
-                ts: Date.now() - (BUFFER_SIZE - i) * 25
-            });
-        }
+        // Simple two-point interpolation
+        let prev = {
+            ax: 0, ay: 0, az: 1,
+            gx: 0, gy: 0, gz: 0,
+            roll: 0, pitch: 0,
+            temp: 25.0,
+            ts: Date.now()
+        };
+
+        let curr = {
+            ax: 0, ay: 0, az: 1,
+            gx: 0, gy: 0, gz: 0,
+            roll: 0, pitch: 0,
+            temp: 25.0,
+            ts: Date.now()
+        };
 
         // ─── WebSocket connection ──────────────────────────────────────────────
         let ws;
@@ -206,14 +208,9 @@
             ws.onmessage = (event) => {
                 const msg = JSON.parse(event.data);
                 if (msg.type === 'sensor') {
-                    // Just append to buffer, never snap to current
-                    const newReading = { ...msg.data, ts: Date.now() };
-                    readingBuffer.push(newReading);
-                    
-                    // Keep buffer size stable
-                    if (readingBuffer.length > BUFFER_SIZE) {
-                        readingBuffer.shift();
-                    }
+                    // Shift: curr → prev, new → curr
+                    prev = { ...curr };
+                    curr = { ...msg.data, ts: Date.now() };
                 }
             };
 
@@ -233,57 +230,26 @@
 
         connectWS();
 
-        // ─── Hermite spline interpolation ──────────────────────────────────────
-        // Smoother than Catmull-Rom, uses velocity hints for natural curves
-        function hermiteInterpolate(p0, v0, p1, v1, t) {
-            const t2 = t * t;
-            const t3 = t2 * t;
-            const h00 = 2*t3 - 3*t2 + 1;
-            const h10 = t3 - 2*t2 + t;
-            const h01 = -2*t3 + 3*t2;
-            const h11 = t3 - t2;
-            return h00*p0 + h10*v0 + h01*p1 + h11*v1;
-        }
-
-        // ─── Render from slightly in the past ──────────────────────────────────
-        // This is the key: always interpolate, never jump
+        // ─── Simple linear interpolation ───────────────────────────────────────
+        // Just lerp smoothly between prev and curr based on elapsed time
         function getDisplayState() {
             const now = Date.now();
+            const span = curr.ts - prev.ts;
             
-            // Render state from ~40ms ago (1.5 frames back at 60fps)
-            // This ensures we always have data before AND after the render point
-            const RENDER_DELAY = 40;  // milliseconds
-            const renderTime = now - RENDER_DELAY;
-            
-            // Find the two readings that bracket renderTime
-            let idx1 = 0;
-            for (let i = 0; i < readingBuffer.length - 1; i++) {
-                if (readingBuffer[i].ts <= renderTime && renderTime < readingBuffer[i+1].ts) {
-                    idx1 = i;
-                    break;
-                }
+            // If readings are too close or no time has passed, use curr
+            if (span < 5) {
+                return { ...curr };
             }
             
-            const p0 = readingBuffer[idx1];
-            const p1 = readingBuffer[idx1 + 1];
+            // How far between prev (t=0) and curr (t=1) are we?
+            const elapsed = now - prev.ts;
+            const t = Math.max(0, Math.min(1, elapsed / span));
             
-            if (!p1) {
-                // Shouldn't happen, but fallback to most recent
-                return { ...readingBuffer[readingBuffer.length - 1] };
-            }
-            
-            // Linear interpolation between the two bracketing readings
-            const span = p1.ts - p0.ts;
-            if (span < 1) {
-                return { ...p1 };
-            }
-            
-            const t = (renderTime - p0.ts) / span;
             const result = {};
             const keys = ['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'roll', 'pitch', 'temp'];
             
             for (const key of keys) {
-                result[key] = p0[key] + (p1[key] - p0[key]) * t;
+                result[key] = prev[key] + (curr[key] - prev[key]) * t;
             }
             
             return result;
