@@ -223,6 +223,7 @@
                 
                 if (msg.type === 'sensor') {
                     const timeSinceLastMsg = msgTime - lastMessageTime;
+                    const rollDelta = Math.abs(msg.data.roll - curr.roll);
                     
                     // Shift: curr → prev, new → curr
                     prev = { ...curr };
@@ -231,9 +232,9 @@
                     messageCount++;
                     lastMessageTime = msgTime;
                     
-                    // Log every 5 messages
-                    if (messageCount % 5 === 0) {
-                        log(`[sensor] msg #${messageCount} | interval: ${timeSinceLastMsg}ms | roll: ${curr.roll.toFixed(1)}°`);
+                    // Log every message with roll delta
+                    if (messageCount % 3 === 0) {
+                        log(`[sensor] msg #${messageCount} | interval: ${timeSinceLastMsg}ms | roll: ${curr.roll.toFixed(1)}° (delta: ${rollDelta.toFixed(1)}°) | prev: ${prev.roll.toFixed(1)}°`);
                     }
                 }
             };
@@ -283,6 +284,11 @@
             
             for (const key of keys) {
                 result[key] = prev[key] + (curr[key] - prev[key]) * t_eased;
+            }
+            
+            // Detailed interpolation logging (every 60 frames)
+            if (frameCountLocal % 60 === 0) {
+                log(`[interp] span: ${span}ms | elapsed: ${elapsed}ms | t_linear: ${t_linear.toFixed(3)} | t_eased: ${t_eased.toFixed(3)} | prev.roll: ${prev.roll.toFixed(1)}° | curr.roll: ${curr.roll.toFixed(1)}° | result.roll: ${result.roll.toFixed(1)}°`);
             }
             
             return result;
