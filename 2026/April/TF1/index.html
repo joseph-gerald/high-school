@@ -175,21 +175,17 @@
             temp: 25.0
         };
 
-        // Smooth interpolation using exponential moving average (low-pass filter)
-        // This gives much smoother, more natural motion than linear interpolation
-        const SMOOTH_ALPHA = 0.15;  // Tuned for 60fps + 40Hz sensor data
+        // Velocity estimation for predictive extrapolation
+        let velocityState = {
+            ax: 0, ay: 0, az: 0,
+            gx: 0, gy: 0, gz: 0,
+            roll: 0, pitch: 0,
+            temp: 0
+        };
 
-        function expSmooth(current, target, alpha) {
-            return current + alpha * (target - current);
-        }
-
-        // Reading history for Catmull-Rom interpolation (4-point spline)
-        let readingHistory = [
-            { ...displayState, ts: Date.now() },
-            { ...displayState, ts: Date.now() - 25 },
-            { ...displayState, ts: Date.now() - 50 },
-            { ...displayState, ts: Date.now() - 75 },
-        ];
+        // Reading history
+        let prevReading = { ...displayState, ts: Date.now() };
+        let currReading = { ...displayState, ts: Date.now() };
 
         // ─── WebSocket connection ──────────────────────────────────────────────
         let ws;
@@ -207,9 +203,19 @@
             ws.onmessage = (event) => {
                 const msg = JSON.parse(event.data);
                 if (msg.type === 'sensor') {
-                    // Shift history: p1←p0, p0←new
-                    readingHistory.pop();
-                    readingHistory.unshift({ ...msg.data, ts: Date.now() });
+                    const newReading = { ...msg.data, ts: Date.now() };
+                    
+                    // Calculate velocity (change per millisecond)
+                    const dt = Math.max(1, newReading.ts - currReading.ts) / 1000;
+                    const keys = ['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'roll', 'pitch', 'temp'];
+                    
+                    for (const key of keys) {
+                        velocityState[key] = (newReading[key] - currReading[key]) / dt;
+                    }
+                    
+                    // Shift: curr → prev, new → curr
+                    prevReading = currReading;
+                    currReading = newReading;
                 }
             };
 
@@ -229,46 +235,21 @@
 
         connectWS();
 
-        // ─── Catmull-Rom spline interpolation ──────────────────────────────────
-        function catmullRom(p0, p1, p2, p3, t) {
-            const t2 = t * t;
-            const t3 = t2 * t;
-            return 0.5 * (
-                2 * p1 +
-                (-p0 + p2) * t +
-                (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 +
-                (-p0 + 3 * p1 - 3 * p2 + p3) * t3
-            );
-        }
-
+        // ─── Predictive extrapolation ──────────────────────────────────────────
         function getDisplayState() {
             const now = Date.now();
+            const timeSinceUpdate = now - currReading.ts;
             
-            // Get the two middle points (closest to current time)
-            const p0 = readingHistory[3];
-            const p1 = readingHistory[2];
-            const p2 = readingHistory[1];
-            const p3 = readingHistory[0];
-
-            // Calculate interpolation factor within the p1→p2 segment
-            const span = p2.ts - p1.ts;
-            if (span < 1) {
-                // Readings too close, just use most recent
-                return { ...p2 };
-            }
-
-            const elapsed = now - p1.ts;
-            let t = elapsed / span;
-            t = Math.max(0, Math.min(1, t));
-
-            // Interpolate each value using Catmull-Rom spline
+            // Extrapolate forward using estimated velocity
+            // This predicts where the sensor would be now if motion continues
             const result = {};
             const keys = ['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'roll', 'pitch', 'temp'];
             
             for (const key of keys) {
-                result[key] = catmullRom(p0[key], p1[key], p2[key], p3[key], t);
+                // Extrapolate: current_value + velocity * time_elapsed
+                result[key] = currReading[key] + velocityState[key] * (timeSinceUpdate / 1000);
             }
-
+            
             return result;
         }
 
