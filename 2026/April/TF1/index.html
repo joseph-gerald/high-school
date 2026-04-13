@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPU-6050 3D Visualizer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #ccc;
+            overflow: hidden;
+        }
+        #canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+        }
+        #info {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 400px;
+        }
+        .label { color: #888; }
+        .value { color: #0f0; font-weight: bold; }
+        .accel { color: #ff4455; }
+        .gyro { color: #33ffaa; }
+        .angle { color: #ffaa22; }
+        .status {
+            margin-top: auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-top: 1px solid #333;
+        }
+        .connected { color: #0f0; }
+        .disconnected { color: #f00; }
+        #fps {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div id="overlay">
+        <div id="info">
+            <div><span class="label">Accelerometer (g)</span></div>
+            <div style="margin-left: 10px;">
+                <div>AX <span class="value accel" id="ax">0.000</span></div>
+                <div>AY <span class="value accel" id="ay">0.000</span></div>
+                <div>AZ <span class="value accel" id="az">1.000</span></div>
+            </div>
+            <div style="margin-top: 15px;"><span class="label">Gyroscope (°/s)</span></div>
+            <div style="margin-left: 10px;">
+                <div>GX <span class="value gyro" id="gx">0.0</span></div>
+                <div>GY <span class="value gyro" id="gy">0.0</span></div>
+                <div>GZ <span class="value gyro" id="gz">0.0</span></div>
+            </div>
+            <div style="margin-top: 15px;"><span class="label">Angles</span></div>
+            <div style="margin-left: 10px;">
+                <div>Roll  <span class="value angle" id="roll">0.0</span>°</div>
+                <div>Pitch <span class="value angle" id="pitch">0.0</span>°</div>
+            </div>
+            <div style="margin-top: 15px;"><span class="label">Temperature</span></div>
+            <div style="margin-left: 10px;">
+                <div><span class="value" id="temp">25.0</span> °C</div>
+            </div>
+        </div>
+        <div class="status">
+            <div><span id="status" class="disconnected">● Disconnected</span></div>
+            <div style="margin-top: 10px; font-size: 12px; color: #666;">ws://localhost:8765</div>
+        </div>
+    </div>
+    
+    <div id="fps">-- fps</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // ─── Scene setup ───────────────────────────────────────────────────────
+        const canvas = document.getElementById('canvas');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        scene.fog = new THREE.Fog(0x0a0a0a, 10, 50);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, -3.2, 1.6);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(5, -5, 5);
+        directionalLight.castShadow = true;
+        scene.add(directionalLight);
+
+        // ─── Create PCB board ──────────────────────────────────────────────────
+        const boardGroup = new THREE.Group();
+        scene.add(boardGroup);
+
+        // Board dimensions
+        const [w, h, d] = [0.48, 0.76, 0.055];
+
+        // Create box geometry (PCB)
+        const boardGeom = new THREE.BoxGeometry(w * 2, h * 2, d * 2);
+        const boardMat = new THREE.MeshStandardMaterial({
+            color: 0x1a4d2e,
+            metalness: 0.1,
+            roughness: 0.7,
+        });
+        const boardMesh = new THREE.Mesh(boardGeom, boardMat);
+        boardMesh.castShadow = true;
+        boardMesh.receiveShadow = true;
+        boardGroup.add(boardMesh);
+
+        // Edge outline using wireframe
+        const edgeGeom = new THREE.BoxGeometry(w * 2, h * 2, d * 2);
+        const edgeMat = new THREE.LineBasicMaterial({ color: 0x1f9d55, linewidth: 2 });
+        const edges = new THREE.EdgesGeometry(edgeGeom);
+        const wireframe = new THREE.LineSegments(edges, edgeMat);
+        boardGroup.add(wireframe);
+
+        // ─── Axes helper ──────────────────────────────────────────────────────
+        const axesHelper = new THREE.AxesHelper(1.5);
+        scene.add(axesHelper);
+
+        // Grid helper
+        const gridHelper = new THREE.GridHelper(4, 20, 0x1a1a1a, 0x0a0a0a);
+        scene.add(gridHelper);
+
+        // ─── Acceleration vector arrow ────────────────────────────────────────
+        const arrowGroup = new THREE.Group();
+        scene.add(arrowGroup);
+
+        function updateArrow(x, y, z) {
+            arrowGroup.clear();
+            const length = Math.sqrt(x*x + y*y + z*z);
+            if (length < 0.01) return;
+
+            const dir = new THREE.Vector3(x, y, z).normalize();
+            const origin = new THREE.Vector3(0, 0, 0);
+            const arrowHelper = new THREE.ArrowHelper(dir, origin, length, 0xff4455, 0.2, 0.15);
+            arrowGroup.add(arrowHelper);
+        }
+
+        // ─── Display state (with interpolation) ────────────────────────────────
+        let displayState = {
+            ax: 0, ay: 0, az: 1,
+            gx: 0, gy: 0, gz: 0,
+            roll: 0, pitch: 0,
+            temp: 25.0
+        };
+
+        // Interpolation buffers
+        let prevReading = { ...displayState };
+        let currReading = { ...displayState };
+        let prevTime = Date.now();
+        let currTime = Date.now();
+
+        // ─── WebSocket connection ──────────────────────────────────────────────
+        let ws;
+        const statusEl = document.getElementById('status');
+
+        function connectWS() {
+            ws = new WebSocket('ws://localhost:8765');
+
+            ws.onopen = () => {
+                statusEl.textContent = '● Connected';
+                statusEl.className = 'connected';
+                console.log('[ws] connected');
+            };
+
+            ws.onmessage = (event) => {
+                const msg = JSON.parse(event.data);
+                if (msg.type === 'sensor') {
+                    // Shift buffer: curr → prev, new → curr
+                    prevReading = { ...currReading };
+                    currReading = { ...msg.data };
+                    prevTime = currTime;
+                    currTime = Date.now();
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error('[ws] error:', error);
+                statusEl.textContent = '● Error';
+                statusEl.className = 'disconnected';
+            };
+
+            ws.onclose = () => {
+                statusEl.textContent = '● Disconnected';
+                statusEl.className = 'disconnected';
+                console.log('[ws] disconnected');
+                setTimeout(connectWS, 2000);
+            };
+        }
+
+        connectWS();
+
+        // ─── Interpolation function ────────────────────────────────────────────
+        function getDisplayState() {
+            const now = Date.now();
+            const span = currTime - prevTime;
+
+            if (span < 5) {
+                // Readings arrived too close together, just use current
+                return { ...currReading };
+            }
+
+            // Linear interpolation: t goes from 0 (at prevTime) to 1 (at currTime)
+            const elapsed = now - prevTime;
+            const t = Math.max(0, Math.min(1, elapsed / span));
+
+            return {
+                ax: prevReading.ax + (currReading.ax - prevReading.ax) * t,
+                ay: prevReading.ay + (currReading.ay - prevReading.ay) * t,
+                az: prevReading.az + (currReading.az - prevReading.az) * t,
+                gx: prevReading.gx + (currReading.gx - prevReading.gx) * t,
+                gy: prevReading.gy + (currReading.gy - prevReading.gy) * t,
+                gz: prevReading.gz + (currReading.gz - prevReading.gz) * t,
+                roll: prevReading.roll + (currReading.roll - prevReading.roll) * t,
+                pitch: prevReading.pitch + (currReading.pitch - prevReading.pitch) * t,
+                temp: prevReading.temp + (currReading.temp - prevReading.temp) * t,
+            };
+        }
+
+        // ─── UI update ─────────────────────────────────────────────────────────
+        function updateUI(state) {
+            document.getElementById('ax').textContent = state.ax.toFixed(3);
+            document.getElementById('ay').textContent = state.ay.toFixed(3);
+            document.getElementById('az').textContent = state.az.toFixed(3);
+            document.getElementById('gx').textContent = state.gx.toFixed(1);
+            document.getElementById('gy').textContent = state.gy.toFixed(1);
+            document.getElementById('gz').textContent = state.gz.toFixed(1);
+            document.getElementById('roll').textContent = state.roll.toFixed(1);
+            document.getElementById('pitch').textContent = state.pitch.toFixed(1);
+            document.getElementById('temp').textContent = state.temp.toFixed(1);
+        }
+
+        // ─── Animation loop ────────────────────────────────────────────────────
+        let frameCount = 0;
+        let lastFPSTime = Date.now();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Get interpolated state
+            displayState = getDisplayState();
+
+            // Update board rotation (pitch = Y, roll = X)
+            boardGroup.rotation.order = 'YXZ';
+            boardGroup.rotation.y = THREE.MathUtils.degToRad(displayState.pitch);
+            boardGroup.rotation.x = THREE.MathUtils.degToRad(displayState.roll);
+
+            // Update acceleration arrow
+            updateArrow(displayState.ax, displayState.ay, displayState.az);
+
+            // Update UI
+            updateUI(displayState);
+
+            // FPS counter
+            frameCount++;
+            const now = Date.now();
+            if (now - lastFPSTime >= 1000) {
+                document.getElementById('fps').textContent = frameCount + ' fps';
+                frameCount = 0;
+                lastFPSTime = now;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // ─── Handle window resize ──────────────────────────────────────────────
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
