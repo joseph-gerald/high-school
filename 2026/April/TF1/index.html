@@ -192,9 +192,21 @@
             ts: Date.now()
         };
 
+        // ─── Logging ───────────────────────────────────────────────────────────
+        let frameCount = 0;
+        let lastLogTime = Date.now();
+        const LOG_INTERVAL = 1000; // Log every 1 second
+
+        function log(msg) {
+            const now = Date.now();
+            console.log(`[${now}] ${msg}`);
+        }
+
         // ─── WebSocket connection ──────────────────────────────────────────────
         let ws;
         const statusEl = document.getElementById('status');
+        let messageCount = 0;
+        let lastMessageTime = Date.now();
 
         function connectWS() {
             ws = new WebSocket('ws://localhost:8765');
@@ -202,15 +214,27 @@
             ws.onopen = () => {
                 statusEl.textContent = '● Connected';
                 statusEl.className = 'connected';
-                console.log('[ws] connected');
+                log('[ws] connected');
             };
 
             ws.onmessage = (event) => {
                 const msg = JSON.parse(event.data);
+                const msgTime = Date.now();
+                
                 if (msg.type === 'sensor') {
+                    const timeSinceLastMsg = msgTime - lastMessageTime;
+                    
                     // Shift: curr → prev, new → curr
                     prev = { ...curr };
-                    curr = { ...msg.data, ts: Date.now() };
+                    curr = { ...msg.data, ts: msgTime };
+                    
+                    messageCount++;
+                    lastMessageTime = msgTime;
+                    
+                    // Log every 5 messages
+                    if (messageCount % 5 === 0) {
+                        log(`[sensor] msg #${messageCount} | interval: ${timeSinceLastMsg}ms | roll: ${curr.roll.toFixed(1)}°`);
+                    }
                 }
             };
 
@@ -223,7 +247,7 @@
             ws.onclose = () => {
                 statusEl.textContent = '● Disconnected';
                 statusEl.className = 'disconnected';
-                console.log('[ws] disconnected');
+                log('[ws] disconnected');
                 setTimeout(connectWS, 2000);
             };
         }
@@ -249,16 +273,16 @@
             
             // Linear time progress (0 = at prev, 1 = at curr)
             const elapsed = now - prev.ts;
-            let t = Math.max(0, Math.min(1, elapsed / span));
+            let t_linear = Math.max(0, Math.min(1, elapsed / span));
             
             // Apply easing function to t for smooth acceleration/deceleration
-            t = easeOutCubic(t);
+            let t_eased = easeOutCubic(t_linear);
             
             const result = {};
             const keys = ['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'roll', 'pitch', 'temp'];
             
             for (const key of keys) {
-                result[key] = prev[key] + (curr[key] - prev[key]) * t;
+                result[key] = prev[key] + (curr[key] - prev[key]) * t_eased;
             }
             
             return result;
@@ -278,11 +302,16 @@
         }
 
         // ─── Animation loop ────────────────────────────────────────────────────
-        let frameCount = 0;
+        let frameCountLocal = 0;
         let lastFPSTime = Date.now();
+        let lastFrameTime = Date.now();
 
         function animate() {
             requestAnimationFrame(animate);
+            
+            const frameTime = Date.now();
+            const deltaTime = frameTime - lastFrameTime;
+            lastFrameTime = frameTime;
 
             // Get interpolated state
             displayState = getDisplayState();
@@ -298,13 +327,20 @@
             // Update UI
             updateUI(displayState);
 
-            // FPS counter
-            frameCount++;
+            // FPS counter + frame timing
+            frameCountLocal++;
             const now = Date.now();
             if (now - lastFPSTime >= 1000) {
-                document.getElementById('fps').textContent = frameCount + ' fps';
-                frameCount = 0;
+                const fps = frameCountLocal;
+                document.getElementById('fps').textContent = fps + ' fps';
+                log(`[frame] ${fps} fps | avg delta: ${(1000/fps).toFixed(1)}ms`);
+                frameCountLocal = 0;
                 lastFPSTime = now;
+            }
+            
+            // Log occasionally for frame-level detail
+            if (frameCountLocal % 30 === 0) {
+                log(`[render] roll: ${displayState.roll.toFixed(1)}° | pitch: ${displayState.pitch.toFixed(1)}° | delta: ${deltaTime}ms`);
             }
 
             renderer.render(scene, camera);
