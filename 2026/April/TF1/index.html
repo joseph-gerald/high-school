@@ -175,6 +175,12 @@
             temp: 25.0
         };
 
+        // ─── Logging ───────────────────────────────────────────────────────────
+        function log(msg) {
+            const now = Date.now();
+            console.log(`[${now}] ${msg}`);
+        }
+
         // ─── WebSocket connection ──────────────────────────────────────────────
         let ws;
         const statusEl = document.getElementById('status');
