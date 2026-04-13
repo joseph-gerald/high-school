@@ -167,7 +167,7 @@
             arrowGroup.add(arrowHelper);
         }
 
-        // ─── Display state (with interpolation) ────────────────────────────────
+        // ─── Display state ────────────────────────────────────────────────────────
         let displayState = {
             ax: 0, ay: 0, az: 1,
             gx: 0, gy: 0, gz: 0,
@@ -175,11 +175,21 @@
             temp: 25.0
         };
 
-        // Interpolation buffers
-        let prevReading = { ...displayState };
-        let currReading = { ...displayState };
-        let prevTime = Date.now();
-        let currTime = Date.now();
+        // Smooth interpolation using exponential moving average (low-pass filter)
+        // This gives much smoother, more natural motion than linear interpolation
+        const SMOOTH_ALPHA = 0.15;  // Tuned for 60fps + 40Hz sensor data
+
+        function expSmooth(current, target, alpha) {
+            return current + alpha * (target - current);
+        }
+
+        // Reading history for Catmull-Rom interpolation (4-point spline)
+        let readingHistory = [
+            { ...displayState, ts: Date.now() },
+            { ...displayState, ts: Date.now() - 25 },
+            { ...displayState, ts: Date.now() - 50 },
+            { ...displayState, ts: Date.now() - 75 },
+        ];
 
         // ─── WebSocket connection ──────────────────────────────────────────────
         let ws;
@@ -197,11 +207,9 @@
             ws.onmessage = (event) => {
                 const msg = JSON.parse(event.data);
                 if (msg.type === 'sensor') {
-                    // Shift buffer: curr → prev, new → curr
-                    prevReading = { ...currReading };
-                    currReading = { ...msg.data };
-                    prevTime = currTime;
-                    currTime = Date.now();
+                    // Shift history: p1←p0, p0←new
+                    readingHistory.pop();
+                    readingHistory.unshift({ ...msg.data, ts: Date.now() });
                 }
             };
 
@@ -221,31 +229,47 @@
 
         connectWS();
 
-        // ─── Interpolation function ────────────────────────────────────────────
+        // ─── Catmull-Rom spline interpolation ──────────────────────────────────
+        function catmullRom(p0, p1, p2, p3, t) {
+            const t2 = t * t;
+            const t3 = t2 * t;
+            return 0.5 * (
+                2 * p1 +
+                (-p0 + p2) * t +
+                (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 +
+                (-p0 + 3 * p1 - 3 * p2 + p3) * t3
+            );
+        }
+
         function getDisplayState() {
             const now = Date.now();
-            const span = currTime - prevTime;
+            
+            // Get the two middle points (closest to current time)
+            const p0 = readingHistory[3];
+            const p1 = readingHistory[2];
+            const p2 = readingHistory[1];
+            const p3 = readingHistory[0];
 
-            if (span < 5) {
-                // Readings arrived too close together, just use current
-                return { ...currReading };
+            // Calculate interpolation factor within the p1→p2 segment
+            const span = p2.ts - p1.ts;
+            if (span < 1) {
+                // Readings too close, just use most recent
+                return { ...p2 };
             }
 
-            // Linear interpolation: t goes from 0 (at prevTime) to 1 (at currTime)
-            const elapsed = now - prevTime;
-            const t = Math.max(0, Math.min(1, elapsed / span));
+            const elapsed = now - p1.ts;
+            let t = elapsed / span;
+            t = Math.max(0, Math.min(1, t));
 
-            return {
-                ax: prevReading.ax + (currReading.ax - prevReading.ax) * t,
-                ay: prevReading.ay + (currReading.ay - prevReading.ay) * t,
-                az: prevReading.az + (currReading.az - prevReading.az) * t,
-                gx: prevReading.gx + (currReading.gx - prevReading.gx) * t,
-                gy: prevReading.gy + (currReading.gy - prevReading.gy) * t,
-                gz: prevReading.gz + (currReading.gz - prevReading.gz) * t,
-                roll: prevReading.roll + (currReading.roll - prevReading.roll) * t,
-                pitch: prevReading.pitch + (currReading.pitch - prevReading.pitch) * t,
-                temp: prevReading.temp + (currReading.temp - prevReading.temp) * t,
-            };
+            // Interpolate each value using Catmull-Rom spline
+            const result = {};
+            const keys = ['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'roll', 'pitch', 'temp'];
+            
+            for (const key of keys) {
+                result[key] = catmullRom(p0[key], p1[key], p2[key], p3[key], t);
+            }
+
+            return result;
         }
 
         // ─── UI update ─────────────────────────────────────────────────────────
