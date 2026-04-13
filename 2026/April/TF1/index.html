@@ -230,8 +230,14 @@
 
         connectWS();
 
-        // ─── Simple linear interpolation ───────────────────────────────────────
-        // Just lerp smoothly between prev and curr based on elapsed time
+        // ─── Easing function (ease-out cubic) ──────────────────────────────────
+        // Makes interpolation smooth and natural-feeling
+        function easeOutCubic(t) {
+            return 1 - Math.pow(1 - t, 3);
+        }
+
+        // ─── Smooth interpolation with easing ──────────────────────────────────
+        // Linearly move through time, but use eased t for values
         function getDisplayState() {
             const now = Date.now();
             const span = curr.ts - prev.ts;
@@ -241,9 +247,12 @@
                 return { ...curr };
             }
             
-            // How far between prev (t=0) and curr (t=1) are we?
+            // Linear time progress (0 = at prev, 1 = at curr)
             const elapsed = now - prev.ts;
-            const t = Math.max(0, Math.min(1, elapsed / span));
+            let t = Math.max(0, Math.min(1, elapsed / span));
+            
+            // Apply easing function to t for smooth acceleration/deceleration
+            t = easeOutCubic(t);
             
             const result = {};
             const keys = ['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'roll', 'pitch', 'temp'];
