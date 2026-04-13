@@ -95,7 +95,7 @@ def serial_thread(port):
         fake_thread()
 
 # ─── WebSocket handler ─────────────────────────────────────────────────────────
-async def handler(websocket, path):
+async def handler(websocket):
     """Handle new WebSocket connection."""
     clients.add(websocket)
     print(f"[ws] client connected ({len(clients)} total)")
