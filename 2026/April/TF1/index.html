@@ -272,12 +272,12 @@
                 return { ...curr };
             }
             
-            // Linear time progress (0 = at prev, 1 = at curr)
+            // Linear time progress (0 = at prev, 1 = at curr, >1 = extrapolating ahead)
             const elapsed = now - prev.ts;
-            let t_linear = Math.max(0, Math.min(1, elapsed / span));
+            let t_linear = elapsed / span;  // Don't clamp! Allow extrapolation
             
-            // Apply easing function to t for smooth acceleration/deceleration
-            let t_eased = easeOutCubic(t_linear);
+            // Apply easing function - but cap at 1.5 to prevent wild extrapolation
+            let t_eased = Math.min(1.5, easeOutCubic(Math.min(1.0, t_linear)));
             
             const result = {};
             const keys = ['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'roll', 'pitch', 'temp'];
