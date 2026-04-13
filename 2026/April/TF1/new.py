@@ -36,21 +36,32 @@ buf   = {k: deque(maxlen=HISTORY_LEN) for k in
 latest = {"ax":0,"ay":0,"az":1,"gx":0,"gy":0,"gz":0,"temp":25.0,
           "roll":0.0,"pitch":0.0}
 
-# ── Interpolation: lerp between the two most recent readings ─────────────────
-# _ra = reading that arrived before _rb
-# _rb = most recent reading
-# t   = (now - t_ra) / (t_rb - t_ra), clamped 0..1
-# When a new reading arrives it becomes _rb, old _rb becomes _ra.
-# This always lerps toward the freshest known value with zero added lag.
+# ── Exponential smoothing (low-pass filter) ────────────────────────────────────
+# Smooth the displayed values using exponential moving average (EMA).
+# This provides much better visual smoothness than linear interpolation alone.
+# SMOOTH_FACTOR: 0=frozen, 1=instant, ~0.25 = good for 60fps on 40Hz data
 
 _KEYS = ["roll","pitch","ax","ay","az","gx","gy","gz","temp"]
 
+_SMOOTH_FACTOR = 0.25  # Tuned for 60fps render + 40Hz sensor data
+
+_smooth_state = {"roll":0.0,"pitch":0.0,"ax":0.0,"ay":0.0,"az":1.0,
+                 "gx":0.0,"gy":0.0,"gz":0.0,"temp":25.0}
+_smooth_lock = threading.Lock()
+
+# Interpolation buffers
 _ra   = {"roll":0.0,"pitch":0.0,"ax":0.0,"ay":0.0,"az":1.0,
          "gx":0.0,"gy":0.0,"gz":0.0,"temp":25.0}
 _rb   = {k: v for k, v in _ra.items()}
 _t_ra = [time.time() - 0.025]
 _t_rb = [time.time()]
 _read_lock = threading.Lock()
+
+def _apply_smooth(key: str, target: float) -> float:
+    """One-pole IIR low-pass: y += α*(x - y)"""
+    with _smooth_lock:
+        _smooth_state[key] += _SMOOTH_FACTOR * (target - _smooth_state[key])
+        return _smooth_state[key]
 
 def _push_reading(row):
     with _read_lock:
@@ -62,15 +73,22 @@ def _push_reading(row):
         _t_rb[0] = time.time()
 
 def get_display():
+    # Grab latest reading (with interpolation for fractional timing within a frame)
     with _read_lock:
         now = time.time()
         span = _t_rb[0] - _t_ra[0]
         if span < 1e-6:
-            return dict(_rb)
-        # t=0 when we're at ra, t=1 when we reach rb — clamp so we hold at rb
-        elapsed = now - _t_ra[0]
-        t = max(0.0, min(1.0, elapsed / span))
-        return {k: _ra[k] + (_rb[k] - _ra[k]) * t for k in _KEYS}
+            raw_vals = dict(_rb)
+        else:
+            elapsed = now - _t_ra[0]
+            t = max(0.0, min(1.0, elapsed / span))
+            raw_vals = {k: _ra[k] + (_rb[k] - _ra[k]) * t for k in _KEYS}
+    
+    # Apply exponential smoothing to the interpolated value
+    result = {}
+    for k in _KEYS:
+        result[k] = _apply_smooth(k, raw_vals[k])
+    return result
 
 # ─── File I/O ─────────────────────────────────────────────────────────────────
 def write_data_file(row):
